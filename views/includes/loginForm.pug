@@ -1,3 +1,16 @@
-include header.pug
+//- loginForm.pug
 
-h2 Log ind på din konto
+h1 Log ind på din konto
+
+form(action="/login" method="post")
+    label(for="username") Brugernavn:
+    input(type="text" id="username" name="username")
+
+    label(for="password") Adgangskode:
+    input(type="password" id="password" name="password")
+
+    button(type="submit") Log ind
+
+p Hvis du ikke har en konto, kan du
+    a(href="/register")
+        button(type="button") Tilmeld dig
