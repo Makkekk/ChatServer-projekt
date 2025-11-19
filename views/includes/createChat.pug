@@ -1,0 +1,14 @@
+include header
+
+//- Vis velkommen med brugernavn
+h1 Velkommen, #{username}
+
+//- Formular til at oprette ny chat
+h2 Opret ny chat
+form(method='POST' action='/create/chat')
+    input(type='text' name='chatName' placeholder='Indtast chatnavn' required)
+    button(type='submit') Opret chat
+
+//- Senere kommer liste over tidligere chats her
+h2 Dine chats
+p Ingen chats endnu...
