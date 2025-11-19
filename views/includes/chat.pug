@@ -1,0 +1,25 @@
+include header
+
+//- Vis chatnavnet
+h1 Chat: #{chatName}
+
+//- Liste af beskeder
+h2 Beskeder
+div
+    each message in messages
+        p
+            strong #{message.owner}:
+            |  #{message.text}
+            br
+            small #{message.date}
+
+//- Formular til at sende ny besked
+h2 Send besked
+form(method='POST' action='/send/message')
+    textarea(name='messageText' placeholder='Skriv din besked...' rows='3' cols='50' required)
+    br
+    button(type='submit') Send
+
+//- Link tilbage til createChat
+p
+    a(href='/createChat') ← Tilbage til dine chats
