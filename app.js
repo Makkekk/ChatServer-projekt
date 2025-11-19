@@ -19,3 +19,4 @@ app.get('/', (req, res) => {
 app.listen(8080, () => {
     console.log('Serveren kører på http://localhost:8080')
 });
+
