@@ -14,7 +14,6 @@ app.use(session({
   saveUninitialized: true
 }));
 
-app.use(express.urlencoded({ extended: true }));
 // Landing page route
 app.get('/', (req, res) => {
   res.render('includes/landingPage');
@@ -33,8 +32,8 @@ const  newUser = {
   password : req.body.adgangskode,
   id    : '1',
   dato : new Date()
-
 }
+
 //JSON-fil læses
 const userlist = fs.readFileSync('users.json')
 //JSON konveteres så javascript fatter hvad vi taler om
@@ -44,7 +43,7 @@ jsonNewUser.push(newUser);
 
 //listen omskrives tilbage til JSON
 // indsæt 2 som parameter i tilfælde af at formatering ligner lort
-fs.writeFileSync('users.json', JSON.stringify(jsonNewUse));
+fs.writeFileSync('users.json', JSON.stringify(jsonNewUser));
 
 
 //virker sjovt nok ikke. VI går "offline efter tilføjelse af objekt... skal rettes
