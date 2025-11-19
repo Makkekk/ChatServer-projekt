@@ -17,8 +17,8 @@ app.get('/', (req, res) => {
   res.render('includes/landingPage');
 });
 
-app.get('/createAccount', (request, response)=>{
-response.render('includes/createAccount')
+app.get('/createAccount', (req, res)=>{
+req.render('includes/createAccount')
 })
 
 app.get('/chat', (req, res) => {
