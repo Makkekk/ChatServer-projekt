@@ -17,13 +17,16 @@ app.get('/', (req, res) => {
   res.render('includes/landingPage');
 });
 
-
-
 app.get('/createAccount', (request, response)=>{
-
-  response.render('includes/createAccount')
+response.render('includes/createAccount')
 })
 
+app.get('/chat', (req, res) => {
+  if (!req.session.username) {
+    return res.redirect('/');
+  }
+  res.render('includes/chat', { username: req.session.username });
+});
 
 
 app.listen(8080, () => {
