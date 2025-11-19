@@ -23,7 +23,6 @@ app.get('/createAccount', (req, res)=>{
   res.render('includes/createAccount')
 })
 
-
 // Denne metode fanger post fra createAccount-form og opretter et objekt->henter JSON->Parser->Tilføjer objekt til fil->konverter tilbage til json
 app.post('/opret-bruger', (req, res)=>{
   //Bruger oprettes
@@ -49,6 +48,27 @@ fs.writeFileSync('users.json', JSON.stringify(jsonNewUser));
 //virker sjovt nok ikke. VI går "offline efter tilføjelse af objekt... skal rettes
 res.redirect('/');
 })
+
+// Login route
+app.post('/login', (req, res) => {
+    const { brugernavn, adgangskode } = req.body;
+
+    //læs fil
+    const file = fs.readFileSync('users.json')
+    const users = JSON.parse(file)
+
+    //find bruger
+    const userFound = users.find(user => user.username === brugernavn && user.password === adgangskode)
+
+    if (!userFound) {
+        return res.send('Forkert brugernavn eller adgangskode');
+    }
+
+    // Gem brugernavn i session
+    req.session.username = brugernavn;
+
+    res.redirect('/createChat');
+});
 
 // Opret ny chat
 app.post('/create/chat', (req, res) => {
@@ -83,11 +103,10 @@ app.get('/chat', (req, res) => {
         { owner: 'Bruger2', text: 'Hvordan går det?', date: '2025-11-19 10:05' },
         { owner: 'TestBruger', text: 'Godt tak! Dejligt at være her.', date: '2025-11-19 10:10' }
     ];
-    
+
     res.render('includes/chat', { username, chatName, messages });
 });
 
 app.listen(8080, () => {
     console.log('Serveren kører på http://localhost:8080')
 });
-
