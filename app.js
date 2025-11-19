@@ -5,7 +5,6 @@ const app = express();
 
 app.set('view engine', 'pug');
 
-
 app.use(session({
   secret: 'detHemmeligeSted',
   resave: false,
@@ -16,6 +15,10 @@ app.get('/', (req, res) => {
   res.render('includes/landingPage');
 });
 
+
+
+
 app.listen(8080, () => {
     console.log('Serveren kører på http://localhost:8080')
 });
+
