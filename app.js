@@ -6,8 +6,6 @@ const app = express();
 app.set('view engine', 'pug');
 
 
-
-
 app.use(session({
   secret: 'detHemmeligeSted',
   resave: false,
