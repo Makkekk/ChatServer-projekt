@@ -29,7 +29,7 @@ app.post('/opret-bruger', (req, res)=>{
 const  newUser = {
   username : req.body.brugernavn,
   password : req.body.adgangskode,
-  id    : '1',
+  id    : "1",
   dato : new Date()
 }
 
@@ -83,20 +83,23 @@ app.post('/create/chat', (req, res) => {
 
 // Vis createChat siden (efter login)
 app.get('/createChat', (req, res) => {
-    // Hardcoded brugernavn til test (senere kommer det fra session)
-    const username = 'TestBruger';
+    if (!req.session.username) {
+        return res.redirect('/');
+    }
+    const username = req.session.username
     res.render('includes/createChat', { username });
 });
 
+
 // Vis en chat (TEST VERSION - uden session-tjek)
 app.get('/chat', (req, res) => {
-    // Midlertidigt deaktiveret indtil vi har JSON-fil
-    // if (!req.session.username) {
-    //     return res.redirect('/');
-    // }
+   if (!req.session.username) {
+         return res.redirect('/');
+     }
     
+  const username = req.session.username || 'TestBruger';
+
     // Hardcoded testdata
-    const username = 'TestBruger';
     const chatName = 'Min Test Chat';
     const messages = [
         { owner: 'Bruger1', text: 'Hej med dig!', date: '2025-11-19 10:00' },
