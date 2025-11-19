@@ -15,8 +15,10 @@ app.get('/', (req, res) => {
   res.render('includes/landingPage');
 });
 
+app.get('/createAccount', (request, response)=>{
 
-
+  response.render('includes/createAccount')
+})
 
 app.listen(8080, () => {
     console.log('Serveren kører på http://localhost:8080')

@@ -1,0 +1,9 @@
+include header.pug
+
+h1 Opret dig som bruger
+    body 
+        form(action='/opret-bruger', method='POST')
+                input(type='text', name='brugernavn') 
+                input(type='text', name='adgangskode')
+                
+                button(type='submit') Opret bruger
