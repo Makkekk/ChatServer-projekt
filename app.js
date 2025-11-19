@@ -15,13 +15,12 @@ app.use(session({
 }));
 
 app.use(express.urlencoded({ extended: true }));
-
+// Landing page route
 app.get('/', (req, res) => {
   res.render('includes/landingPage');
 });
 
 app.get('/createAccount', (req, res)=>{
-
   res.render('includes/createAccount')
 })
 
@@ -45,13 +44,15 @@ jsonNewUser.push(newUser);
 
 //listen omskrives tilbage til JSON
 // indsæt 2 som parameter i tilfælde af at formatering ligner lort
-fs.writeFileSync('users.json', JSON.stringify(jsonNewUser));
+fs.writeFileSync('users.json', JSON.stringify(jsonNewUse));
 
 
 //virker sjovt nok ikke. VI går "offline efter tilføjelse af objekt... skal rettes
 res.redirect('/');
 })
 
+
+// Chat route
 app.get('/chat', (req, res) => {
   if (!req.session.username) {
     return res.redirect('/');
