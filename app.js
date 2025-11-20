@@ -29,7 +29,8 @@ app.post('/opret-bruger', (req, res)=>{
 const  newUser = {
   username : req.body.brugernavn,
   password : req.body.adgangskode,
-  id    : "1",
+  id    : Date.now().toString(), //untik id 
+  nivaeu: 1,
   dato : new Date()
 }
 
@@ -45,7 +46,6 @@ jsonNewUser.push(newUser);
 fs.writeFileSync('users.json', JSON.stringify(jsonNewUser));
 
 
-//virker sjovt nok ikke. VI går "offline efter tilføjelse af objekt... skal rettes
 res.redirect('/');
 })
 
@@ -53,7 +53,7 @@ res.redirect('/');
 app.post('/login', (req, res) => {
     const { brugernavn, adgangskode } = req.body;
 
-    //læs fil
+    //læs fil hent data
     const file = fs.readFileSync('users.json')
     const users = JSON.parse(file)
 
@@ -64,19 +64,35 @@ app.post('/login', (req, res) => {
         return res.send('Forkert brugernavn eller adgangskode');
     }
 
-    // Gem brugernavn i session
-    req.session.username = brugernavn;
+    // Gem brugernavn og id i session
+    req.session.username = userFound.username
+    req.session.userId = userFound.id
+    req.session.nivaeu = userFound.nivaeu
+
+    console.log(`Bruger ${brugernavn} logget ind. med nivaeu. ${userFound.nivaeu}`);
 
     res.redirect('/createChat');
 });
 
 // Opret ny chat
 app.post('/create/chat', (req, res) => {
-    const chatName = req.body.chatName;
-    // Hardcoded bruger til test (senere fra session)
-    const username = req.session.username || 'TestBruger';
-    
-    console.log(`Chat oprettet: ${chatName} af ${username}`);
+  if (!req.session.username) {
+        return res.redirect('/');
+    }
+
+    const data = fs.readFileSync('chats.json')
+    const chats = JSON.parse(data)
+
+    const newChat = {
+      id: Date.now().toString(),
+      name: req.body.chatName,
+      ejer: req.session.username,
+      oprettelsesDato: new Date(),
+      messages: []
+    }
+    chats.push(newChat)
+    fs.writeFileSync('chats.json', JSON.stringify(chats))
+
     // Redirect til den nye chat (senere skal vi gemme den først)
     res.redirect('/createChat');
 });
@@ -86,8 +102,8 @@ app.get('/createChat', (req, res) => {
     if (!req.session.username) {
         return res.redirect('/');
     }
-    const username = req.session.username
-    res.render('includes/createChat', { username });
+//sender brugernavn og id videre til pug
+    res.render('includes/createChat', { username: req.session.username, nivaeu: req.session.nivaeu });
 });
 
 
@@ -97,7 +113,7 @@ app.get('/chat', (req, res) => {
          return res.redirect('/');
      }
     
-  const username = req.session.username || 'TestBruger';
+  const username = req.session.username || 'admin';
 
     // Hardcoded testdata
     const chatName = 'Min Test Chat';
