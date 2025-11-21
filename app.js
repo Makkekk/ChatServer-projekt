@@ -2,6 +2,23 @@ import express from 'express';
 import session from 'express-session';
 import fs from 'node:fs'
 
+
+
+
+// ---------- Funcktioner ---------------
+
+
+// Denne funktion tjekker brugeren allerde er logget ind
+function alreadyLoggedIn(req, res, next){
+  if (req.session.username){
+    console.log(req.session.username + ' er logget in');
+    return res.redirect('/createChat');
+  }else{
+    console.log('Ikke logget ind');
+next();
+  }
+}
+
 const app = express();
 
 app.set('view engine', 'pug');
@@ -14,8 +31,8 @@ app.use(session({
   saveUninitialized: true
 }));
 
-// Landing page route
-app.get('/', (req, res) => {
+// Landing page route, her indsættes vores bruger check 'alreadyLoggedIN'
+app.get('/', alreadyLoggedIn, (req, res) => {
   res.render('includes/landingPage');
 });
 
