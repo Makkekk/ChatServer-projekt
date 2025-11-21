@@ -1,5 +1,6 @@
 import express from 'express';
 import session from 'express-session';
+import { all } from 'express/lib/application';
 import fs from 'node:fs'
 
 const app = express();
@@ -39,14 +40,14 @@ const userlist = fs.readFileSync('users.json')
 //JSON konveteres så javascript fatter hvad vi taler om
 const jsonNewUser = JSON.parse(userlist)
 //newUser tilføjes
-jsonNewUser.push(newUser);
+jsonNewUser.push(newUser)
 
 //listen omskrives tilbage til JSON
 // indsæt 2 som parameter i tilfælde af at formatering ligner lort
 fs.writeFileSync('users.json', JSON.stringify(jsonNewUser));
 
 
-res.redirect('/');
+res.redirect('/')
 })
 
 // Login route
@@ -86,7 +87,7 @@ app.post('/create/chat', (req, res) => {
     const newChat = {
       id: Date.now().toString(),
       name: req.body.chatName,
-      ejer: req.session.username,
+      ejer: req.session.userId,
       oprettelsesDato: new Date(),
       messages: []
     }
@@ -102,10 +103,51 @@ app.get('/createChat', (req, res) => {
     if (!req.session.username) {
         return res.redirect('/');
     }
-//sender brugernavn og id videre til pug
-    res.render('includes/createChat', { username: req.session.username, nivaeu: req.session.nivaeu });
+
+    if (req.session.nivaeu === 3) {
+      const allUsers = fs.readFileSync('users.json');
+      users = allUsers.map(user => ({ username: user.username, id: user.id, nivaeu: user.nivaeu }));
+
+    
+      return res.render('includes/createChat', { username: req.session.username, nivaeu: req.session.nivaeu, chats: chats , users: users});
+    }})
+
+
+//slet chat (niveau 3)
+app.delete('/api/chats/:id', (req, res) => {
+  if (!req.session.username || req.session.nivaeu < 3) {
+        return res.status(401).send('Ikke autoriseret');
+    }
+
+  const chatId = req.params.id;
+  const data = fs.readFileSync('chats.json');
+  let chats = JSON.parse(data);
+
+  const newChatList = chatId.filter(chat => chat.id !== chatid);
+  fs.writeFileSync('chats.json', JSON.stringify(newChatList));
+
+  res.status(200).send('Chat slettet');
 });
 
+//rediger CAT 
+app.put('/api/chats/:id', (req, res) => {
+  if (!req.session.username || req.session.nivaeu < 2) {
+        return res.status(401).send('Ikke autoriseret');
+    }
+
+    const chatId = req.params.id;
+    const newName = req.body.name;
+    let chats = JSON.parse(fs.readFileSync('chats.json'));
+
+    const chatIndex = chats.findIndex(chat => chat.id === chatId);
+    if (chatIndex === -1) {
+        chats[chatIndex].name = newName
+        fs.writeFileSync('chats.json', JSON.stringify(chats));
+        return res.status(200).send('Chat opdateret');
+    } else {
+        return res.status(404).send('Chat ikke fundet');
+    } 
+});
 
 // Vis en chat (TEST VERSION - uden session-tjek)
 app.get('/chat', (req, res) => {

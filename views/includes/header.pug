@@ -4,3 +4,7 @@ html(lang="da")
     meta(charset="UTF-8")
     title= title
   body
+    nav
+        a(href="/") Forside
+        if username 
+            span  | Logget ind som: #{username}
