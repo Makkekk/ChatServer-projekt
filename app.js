@@ -6,7 +6,7 @@ import fs from 'node:fs';
 const app = express();
 
 app.set('view engine', 'pug');
-app.use(express.static('public'));
+app.use('/assets', express.static('assets'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({
@@ -120,17 +120,35 @@ app.get('/createChat', (req, res) => {
     if (!req.session.username) {
         return res.redirect('/');
     }
-    const chats = (fs.readFileSync('chats.json'));
 
+    // Hent alle chats fra filen
+    const chats = fs.readFileSync('chats.json');
     const chatsParsed = JSON.parse(chats);
 
-    // Filtrer chats for kun at vise dem, der tilhører den loggede bruger
-    const chatsForUser = chatsParsed.filter(chat => chat.ejer === req.session.username);
-  
-    
-//sender brugernavn id, chat videre til pug
-    res.render('includes/createChat', { username: req.session.username, niveau: req.session.niveau, chats: chatsForUser});
+    // Start med at vise alle chats
+    let chatsForUser = chatsParsed;
+
+    // Hvis ikke admin (niveau 3), filtrer kun egne chats
+    if (req.session.niveau !== 3) {
+        chatsForUser = chatsParsed.filter(chat => chat.ejer === req.session.username);
+    }
+
+    // Liste af brugere, kun for admin
+    let allUsers = [];
+    if (req.session.niveau === 3) {
+        const users = fs.readFileSync('users.json');
+        allUsers = JSON.parse(users);
+    }
+
+    // Send data videre til Pug
+    res.render('includes/createChat', { 
+        username: req.session.username, 
+        niveau: req.session.niveau, 
+        chats: chatsForUser, 
+        users: allUsers 
+    });
 });
+
 
 //enkeklt chatrum
 app.get('/chat/:id', (req, res) => {
@@ -186,28 +204,30 @@ app.post('/chat/message', (req, res) => {
 //slet chat
 app.delete('/chat/:id', (req, res) => {
     if (!req.session.username) {
-        return res.status(401).send('Ikke autoriseret');
+        return res.status(401).send({ error: 'Ikke autoriseret' });
     }
+
     const chatId = req.params.id;
     const data = fs.readFileSync('chats.json');
     const chats = JSON.parse(data);
 
-    const chatToDelete = chats.find(chat =>chat.id === chatId)
-
+    const chatToDelete = chats.find(chat => chat.id === chatId);
     if (!chatToDelete) {
-       return res.status(404).send('Chat ikke fundet')
+       return res.status(404).send({ error: 'Chat ikke fundet' });
     }
 
-    const erAdmin = req.session.niveau === 3
-    const erEjer = req.session.niveau === 2 && chatToDelete.ejer === req.session.username
+    const erAdmin = req.session.niveau === 3;
+    const erEjer = req.session.niveau === 2 && chatToDelete.ejer === req.session.username;
 
+    let newChats = chats; // start with original
     if (erAdmin || erEjer) {
-      const newChat = chats.filter(chat => chat.id !== chatId)
+        newChats = chats.filter(chat => chat.id !== chatId);
+        fs.writeFileSync('chats.json', JSON.stringify(newChats));
+        return res.status(200).send({ message: 'Chat slettet' });
+    } else {
+        return res.status(403).send({ error: 'Ikke autoriseret til at slette' });
     }
-
-    fs.writeFileSync('chats.json',JSON.stringify(newChat))
-
-  })
+});
 
 app.get('/logout', (req, res) => {
     req.session.destroy()

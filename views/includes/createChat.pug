@@ -2,23 +2,32 @@ include header
 
 h1 Velkommen, #{username}
 
-//- Opret ny chat form
 h2 Opret ny chat
 form(method='POST' action='/create/chat')
     input(type='text' name='chatName' placeholder='Indtast chatnavn' required)
     button(type='submit') Opret chat
 
-h2 Dine chats 
+h2 Dine chats
 ul
-    each chat in chats
-        li(id=`chat-${chat.id}`)
-            
-           a(href='/chat/' + chat.id) #{chat.name}
-            
-            //- Vis kun slet knap hvis niveau passer
-            if niveau === 3 || (niveau === 2 && chat.ejer === username)
-                button(onclick=`sletChat('${chat.id}')` style="margin-left: 10px; color: red;") Slet chat
+    if chats.length > 0
+        each chat in chats
+            li(id='chat-' + chat.id)
+                a(href='/chat/' + chat.id) #{chat.name}
 
-a(href="/") Tilbage til startsiden
+                //- Vis kun sletknap hvis niveau passer
+                if niveau === 3 || (niveau === 2 && chat.ejer === username)
+                    button(type='button' onclick=`sletChat('${chat.id}')`) Slet chat
+    else
+        li Du har ingen chats endnu.
 
-script(src="/assets/javascript/deleteScript.js")
+if niveau === 3
+    hr
+    h2 Administer brugere
+    if users && users.length > 0
+        ul
+            each user in users
+                li #{user.username} - Niveau: #{user.niveau}
+    else
+        p Ingen brugere fundet.
+
+script(src='/assets/javascript/deleteScript.js')
