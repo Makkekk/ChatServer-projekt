@@ -92,6 +92,8 @@ app.post('/login', (req, res) => {
     res.redirect('/createChat');
 });
 
+
+
 // Opret ny chat
 app.post('/create/chat', (req, res) => {
   if (!req.session.username) {
