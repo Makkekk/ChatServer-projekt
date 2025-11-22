@@ -1,23 +1,7 @@
 import express from 'express';
 import session from 'express-session';
-import fs from 'node:fs'
+import fs from 'node:fs';
 
-
-
-
-// ---------- Funcktioner ---------------
-
-
-// Denne funktion tjekker brugeren allerde er logget ind
-function alreadyLoggedIn(req, res, next){
-  if (req.session.username){
-    console.log(req.session.username + ' er logget in');
-    return res.redirect('/createChat');
-  }else{
-    console.log('Ikke logget ind');
-next();
-  }
-}
 
 const app = express();
 
@@ -31,6 +15,22 @@ app.use(session({
   saveUninitialized: true
 }));
 
+
+// ---------- Funktioner ---------------
+
+
+// Denne funktion tjekker brugeren allerde er logget ind
+function alreadyLoggedIn(req, res, next){
+  if (req.session.username){
+    console.log(req.session.username + ' er logget in');
+    return res.redirect('/createChat');
+  }else{
+    console.log('Ikke logget ind');
+next();
+  }
+}
+
+
 // Landing page route, her indsættes vores bruger check 'alreadyLoggedIN'
 app.get('/', alreadyLoggedIn, (req, res) => {
   res.render('includes/landingPage');
@@ -42,26 +42,29 @@ app.get('/createAccount', (req, res)=>{
 
 // Denne metode fanger post fra createAccount-form og opretter et objekt->henter JSON->Parser->Tilføjer objekt til fil->konverter tilbage til json
 app.post('/opret-bruger', (req, res)=>{
+  //Læs JSON-fil
+const userlist = fs.readFileSync('users.json')
+//JSON konveteres så javascript fatter hvad vi taler om
+const jsonNewUser = JSON.parse(userlist)
+
+const existingUser = jsonNewUser.find(user => user.username === req.body.brugernavn);
+if (existingUser) {
+  return res.send('Brugernavn er allerede taget.');
+}
   //Bruger oprettes
 const  newUser = {
   username : req.body.brugernavn,
   password : req.body.adgangskode,
-  id    : Date.now().toString(), //untik id 
-  nivaeu: 1,
+  id    : Date.now().toString(), //unik id 
+  niveau: 1,
   dato : new Date()
 }
-
-//JSON-fil læses
-const userlist = fs.readFileSync('users.json')
-//JSON konveteres så javascript fatter hvad vi taler om
-const jsonNewUser = JSON.parse(userlist)
 //newUser tilføjes
 jsonNewUser.push(newUser);
 
 //listen omskrives tilbage til JSON
 // indsæt 2 som parameter i tilfælde af at formatering ligner lort
 fs.writeFileSync('users.json', JSON.stringify(jsonNewUser));
-
 
 res.redirect('/');
 })
@@ -84,9 +87,7 @@ app.post('/login', (req, res) => {
     // Gem brugernavn og id i session
     req.session.username = userFound.username
     req.session.userId = userFound.id
-    req.session.nivaeu = userFound.nivaeu
-
-    console.log(`Bruger ${brugernavn} logget ind. med nivaeu. ${userFound.nivaeu}`);
+    req.session.niveau = userFound.niveau
 
     res.redirect('/createChat');
 });
@@ -114,33 +115,103 @@ app.post('/create/chat', (req, res) => {
     res.redirect('/createChat');
 });
 
-// Vis createChat siden (efter login)
+// Vis chats (efter login)
 app.get('/createChat', (req, res) => {
     if (!req.session.username) {
         return res.redirect('/');
     }
-//sender brugernavn og id videre til pug
-    res.render('includes/createChat', { username: req.session.username, nivaeu: req.session.nivaeu });
+    const chats = (fs.readFileSync('chats.json'));
+
+    const chatsParsed = JSON.parse(chats);
+
+    // Filtrer chats for kun at vise dem, der tilhører den loggede bruger
+    const chatsForUser = chatsParsed.filter(chat => chat.ejer === req.session.username);
+  
+    
+//sender brugernavn id, chat videre til pug
+    res.render('includes/createChat', { username: req.session.username, niveau: req.session.niveau, chats: chatsForUser});
 });
 
-
-// Vis en chat (TEST VERSION - uden session-tjek)
-app.get('/chat', (req, res) => {
+//enkeklt chatrum
+app.get('/chat/:id', (req, res) => {
    if (!req.session.username) {
          return res.redirect('/');
      }
-    
-  const username = req.session.username || 'admin';
 
-    // Hardcoded testdata
-    const chatName = 'Min Test Chat';
-    const messages = [
-        { owner: 'Bruger1', text: 'Hej med dig!', date: '2025-11-19 10:00' },
-        { owner: 'Bruger2', text: 'Hvordan går det?', date: '2025-11-19 10:05' },
-        { owner: 'TestBruger', text: 'Godt tak! Dejligt at være her.', date: '2025-11-19 10:10' }
-    ];
+     const chatId = req.params.id;
 
-    res.render('includes/chat', { username, chatName, messages });
+  
+     const chats = (fs.readFileSync('chats.json'));
+     const chatsParsed = JSON.parse(chats);
+     const currentChat = chatsParsed.find(chat => chat.id === chatId);  
+
+     const chatMessages = fs.readFileSync('messages.json');
+     const messagesParsed = JSON.parse(chatMessages);
+
+     const chatMessagesFiltered = messagesParsed.filter(message => message.chatId === chatId);
+
+     res.render('includes/chat', {
+        username: req.session.username,
+        chat: currentChat,
+        chatName: currentChat.name,
+        messages: chatMessagesFiltered // Vi sender kun de relevante beskeder videre
+     });
+});
+
+//send besked
+app.post('/chat/message', (req, res) => {
+    if (!req.session.username) {
+        return res.redirect('/');
+    }
+    const { chatId, messageText } = req.body;
+
+    let chat= fs.readFileSync('messages.json')
+    const parseChat = JSON.parse(chat)
+
+
+    const newMessage = {
+        chatId: Date.now().toString(),
+        chatId: chatId,
+        sender: req.session.username,
+        text: messageText,
+        date: new Date().toLocaleDateString()
+    };
+
+    parseChat.push(newMessage)  
+    fs.writeFileSync('messages.json', JSON.stringify(parseChat));
+
+    res.redirect(`/chat/${chatId}`);
+})
+
+//slet chat
+app.delete('/chat/:id', (req, res) => {
+    if (!req.session.username) {
+        return res.status(401).send('Ikke autoriseret');
+    }
+    const chatId = req.params.id;
+    const data = fs.readFileSync('chats.json');
+    const chats = JSON.parse(data);
+
+    const chatToDelete = chats.find(chat =>chat.id === chatId)
+
+    if (!chatToDelete) {
+       return res.status(404).send('Chat ikke fundet')
+    }
+
+    const erAdmin = req.session.niveau === 3
+    const erEjer = req.session.niveau === 2 && chatToDelete.ejer === req.session.username
+
+    if (erAdmin || erEjer) {
+      const newChat = chats.filter(chat => chat.id !== chatId)
+    }
+
+    fs.writeFileSync('chats.json',JSON.stringify(newChat))
+
+  })
+
+app.get('/logout', (req, res) => {
+    req.session.destroy()
+    res.redirect('/');
 });
 
 app.listen(8080, () => {

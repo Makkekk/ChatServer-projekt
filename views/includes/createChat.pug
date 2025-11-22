@@ -1,14 +1,24 @@
 include header
 
-//- Vis velkommen med brugernavn
 h1 Velkommen, #{username}
 
-//- Formular til at oprette ny chat
+//- Opret ny chat form
 h2 Opret ny chat
 form(method='POST' action='/create/chat')
     input(type='text' name='chatName' placeholder='Indtast chatnavn' required)
     button(type='submit') Opret chat
 
-//- Senere kommer liste over tidligere chats her
-h2 Dine chats
-p Ingen chats endnu...
+h2 Dine chats 
+ul
+    each chat in chats
+        li(id=`chat-${chat.id}`)
+            
+           a(href='/chat/' + chat.id) #{chat.name}
+            
+            //- Vis kun slet knap hvis niveau passer
+            if niveau === 3 || (niveau === 2 && chat.ejer === username)
+                button(onclick=`sletChat('${chat.id}')` style="margin-left: 10px; color: red;") Slet chat
+
+a(href="/") Tilbage til startsiden
+
+script(src="/assets/javascript/deleteScript.js")

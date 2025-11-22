@@ -4,3 +4,7 @@ html(lang="da")
     meta(charset="UTF-8")
     title= title
   body
+
+    if username
+      p Du er logget ind som #{username} (Niveau: #{nivaeu})
+      a(href="/logout") Log ud

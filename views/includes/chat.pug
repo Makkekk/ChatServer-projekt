@@ -3,23 +3,27 @@ include header
 //- Vis chatnavnet
 h1 Chat: #{chatName}
 
+p
+    a(href='/createChat') ← Tilbage til dine chats
+
 //- Liste af beskeder
 h2 Beskeder
-div
-    each message in messages
-        p
-            strong #{message.owner}:
-            |  #{message.text}
-            br
-            small #{message.date}
+    if messages.length > 0
+        each message in messages
+            p
+                strong #{message.sender}: 
+                span #{message.text}
+                br
+                small(style="color:grey") #{message.date}
+    else
+        p Ingen beskeder endnu.
 
 //- Formular til at sende ny besked
 h2 Send besked
-form(method='POST' action='/send/message')
-    textarea(name='messageText' placeholder='Skriv din besked...' rows='3' cols='50' required)
+form(method='POST' action='/chat/message')
+    //- Skjult input til chatId
+    input(type='hidden' name='chatId' value=chat.id)
+    
+    textarea(name='messageText' placeholder='Skriv din besked...')
     br
-    button(type='submit') Send
-
-//- Link tilbage til createChat
-p
-    a(href='/createChat') ← Tilbage til dine chats
+    button(type='submit' style="margin-top:5px") Send
