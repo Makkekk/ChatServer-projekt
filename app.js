@@ -93,7 +93,6 @@ app.post('/login', (req, res) => {
 });
 
 
-
 // Opret ny chat
 app.post('/create/chat', (req, res) => {
   if (!req.session.username) {
@@ -113,7 +112,7 @@ app.post('/create/chat', (req, res) => {
     chats.push(newChat)
     fs.writeFileSync('chats.json', JSON.stringify(chats))
 
-    // Redirect til den nye chat (senere skal vi gemme den først)
+
     res.redirect('/createChat');
 });
 
@@ -190,7 +189,7 @@ app.post('/chat/message', (req, res) => {
 
 
     const newMessage = {
-        chatId: Date.now().toString(),
+        messageId: Date.now().toString(),
         chatId: chatId,
         sender: req.session.username,
         text: messageText,
@@ -221,19 +220,84 @@ app.delete('/chat/:id', (req, res) => {
     const erAdmin = req.session.niveau === 3;
     const erEjer = req.session.niveau === 2 && chatToDelete.ejer === req.session.username;
 
-    let newChats = chats; // start with original
+   
     if (erAdmin || erEjer) {
-        newChats = chats.filter(chat => chat.id !== chatId);
+       const newChats = chats.filter(chat => chat.id !== chatId);
         fs.writeFileSync('chats.json', JSON.stringify(newChats));
-        return res.status(200).send({ message: 'Chat slettet' });
-    } else {
-        return res.status(403).send({ error: 'Ikke autoriseret til at slette' });
+
+        const messagesData = fs.readFileSync('messages.json');
+        const messages = JSON.parse(messagesData);
+        const newMessages = messages.filter(message => message.chatId !== chatId);
+        fs.writeFileSync('messages.json', JSON.stringify(newMessages));
     }
+    res.status(200).send({ message: 'Chat slettet' });
 });
 
 app.get('/logout', (req, res) => {
     req.session.destroy()
     res.redirect('/');
+});
+
+
+
+
+
+// RESTFUL API ENDPOINTS (Krav fra opgaven) - Jeg ved ikke om vi skal bygge siden ud fra dette via dom
+
+// /chats - Returnerer en liste af alle chats
+app.get('/chats', (req, res) => {
+    if (!fs.existsSync('chats.json')) return res.json([]);
+    const chats = JSON.parse(fs.readFileSync('chats.json'));
+    res.json(chats);
+});
+
+//chats/:id - Returnerer en specifik chat
+app.get('/chats/:id', (req, res) => {
+    const chatId = req.params.id;
+    if (!fs.existsSync('chats.json')) return res.status(404).json({error: 'Ingen data'});
+    
+    const chats = JSON.parse(fs.readFileSync('chats.json'));
+    const chat = chats.find(c => c.id === chatId);
+    
+    if (!chat) 
+      return res.status(404).json({ error: 'Chat ikke fundet' });
+    res.json(chat);
+});
+
+// /chats/:id/messages - Returnerer beskeder for en chat
+app.get('/chats/:id/messages', (req, res) => {
+    const chatId = req.params.id;
+    if (!fs.existsSync('messages.json')) return res.json([]);
+    
+    const messages = JSON.parse(fs.readFileSync('messages.json'));
+    const chatMessages = messages.filter(m => m.chatId === chatId);
+    
+    res.json(chatMessages);
+});
+
+// /users - Returnerer en liste af brugere
+app.get('/users', (req, res) => {
+    // Måske kun for admin?
+    const users = JSON.parse(fs.readFileSync('users.json'));
+    
+    res.json(users);
+})
+
+app.get('/users/:id', (req, res) => {
+    const userId = req.params.id;
+    
+    const users = JSON.parse(fs.readFileSync('users.json'));
+    const user = users.find(u => u.id === userId);
+    if (!user) return res.status(404).json({ error: 'Bruger ikke fundet' });
+    res.json(user);
+});
+
+app.get('/users/:id/messages', (req, res) => {
+    const userId = req.params.id;
+
+    const messages = JSON.parse(fs.readFileSync('messages.json'));
+    const userMessages = messages.filter(m => m.senderId === userId);
+    res.json(userMessages);
 });
 
 app.listen(8080, () => {
