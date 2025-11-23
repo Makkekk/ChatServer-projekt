@@ -22,12 +22,20 @@ app.use("/assets", express.static("./public/assets"));
 // ------------------- AUTH -------------------
 // Landingpage
 app.get("/", (req, res) => {
-  if (req.session.user) {
-    return res.redirect("/createChat")
-  } else {
-  res.render("includes/landingPage");
-}})
+  if (!req.session.user) {
+    return res.render("includes/landingPage");
+  }
+  // Vis kun chats som tilhører brugeren
+  const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
+  const userChats = chats.filter(chat => chat.ejer === req.session.user.username);
 
+  res.render("includes/index", {
+    username: req.session.user.username,
+    niveau: req.session.user.niveau,
+    chats: userChats,
+    users: [] // Admin kan tilføjes senere
+  });
+});
 
 // Login page
 app.get("/login", (req, res) => res.render("includes/login"));
@@ -49,7 +57,7 @@ app.post("/login", (req, res) => {
 
 // Logout
 app.get("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("includes/login"));
+  req.session.destroy(() => res.redirect("/login"));
 });
 
 // Create account POST
@@ -72,29 +80,19 @@ app.post("/opret-bruger", (req, res) => {
   res.redirect("/login");
 });
 
-// ------------------- HOME -------------------
-app.get("/", (req, res) => {
-  if (!req.session.user) return res.redirect("includes/login");
-  const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
-  res.render("index", {
-    username: req.session.user.username,
-    niveau: req.session.user.niveau,
-    chats,
-    users: [] // Admin kan tilføjes senere
-  });
-});
-
 // ------------------- CHATS -------------------
 
 // Create chat page
 app.get("/createChat", (req, res) => {
-  if (!req.session.user) return res.redirect("includes/login");
+  if (!req.session.user) return res.redirect("/login");
   const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
+
+const userChats = chats.filter(chat => chat.ejer === req.session.user.username);
 
   res.render("includes/createChat", {
     username: req.session.user.username,
     niveau: req.session.user.niveau,
-    chats,
+    chats: userChats,
     users: []
   });
 });
@@ -169,6 +167,10 @@ app.post("/chat/message", (req, res) => {
   fs.writeFileSync("./JsonModeller/messages.json", JSON.stringify(messages));
 
   res.json(newMessage);
+});
+
+app.get("/logout", (req, res) => {
+  req.session.destroy(() => res.redirect("/login"));
 });
 
 // ------------------- START SERVER -------------------
