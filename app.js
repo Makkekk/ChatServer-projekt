@@ -111,12 +111,12 @@ app.post("/create/chat", (req, res) => {
   };
   chats.push(newChat);
   fs.writeFileSync("./JsonModeller/chats.json", JSON.stringify(chats));
-  res.redirect("includes/createChat");
+  res.redirect("/createChat");
 });
 
 // Get single chat
 app.get("/chat/:chatId", (req, res) => {
-  if (!req.session.user) return res.redirect("includes/login");
+  if (!req.session.user) return res.redirect("/login");
 
   const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
   const chat = chats.find(c => c.id === req.params.chatId);
