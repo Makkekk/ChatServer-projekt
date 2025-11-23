@@ -1,0 +1,15 @@
+include header.pug
+
+h1 Log ind på din konto
+
+form(action="/login", method="post")
+  label(for="brugernavn") Brugernavn:
+  input(type="text", name="brugernavn", required)
+  br
+  label(for="adgangskode") Adgangskode:
+  input(type="password", name="adgangskode", required)
+  br
+  button(type="submit") Log ind
+
+p Hvis du ikke har en konto
+  a(href="/createAccount") Opret bruger

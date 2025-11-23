@@ -1,29 +1,24 @@
-include header
+include header.pug
 
-//- Vis chatnavnet
 h1 Chat: #{chatName}
-
 p
-    a(href='/createChat') ← Tilbage til dine chats
+  a(href='/createChat') ← Tilbage til chats
 
-//- Liste af beskeder
 h2 Beskeder
-    if messages.length > 0
-        each message in messages
-            p
-                strong #{message.sender}: 
-                span #{message.text}
-                br
-                small(style="color:grey") #{message.date}
-    else
-        p Ingen beskeder endnu.
+div#messages
+  if messages.length > 0
+    each message in messages
+      p
+        strong #{message.sender}: 
+        | #{message.text}
+        br
+        small #{message.date}
+  else
+    p Ingen beskeder endnu.
 
-//- Formular til at sende ny besked
 h2 Send besked
-form(method='POST' action='/chat/message')
-    //- Skjult input til chatId
-    input(type='hidden' name='chatId' value=chat.id)
-    
-    textarea(name='messageText' placeholder='Skriv din besked...')
-    br
-    button(type='submit' style="margin-top:5px") Send
+textarea(id='messageText', placeholder='Skriv din besked...')
+br
+button(type='button', onclick=`sendMessage('${chatId}')`) Send
+
+script(src='/assets/javascript/sendScript.js')

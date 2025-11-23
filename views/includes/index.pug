@@ -1,0 +1,31 @@
+include header.pug
+
+h1 Velkommen, #{username}
+
+h2 Dine chats
+ul
+  if chats.length > 0
+    each chat in chats
+      li(id='chat-' + chat.id)
+        a(href='/chat/' + chat.id) #{chat.name}
+        if niveau === 3 || (niveau === 2 && chat.ejer === username)
+          button(type='button', onclick=`sletChat('${chat.id}')`) Slet chat
+  else
+    li Du har ingen chats endnu.
+
+if niveau === 3
+  hr
+  h2 Administer brugere
+  if users && users.length > 0
+    ul
+      each user in users
+        li #{user.username} - Niveau: #{user.niveau}
+  else
+    p Ingen brugere fundet.
+
+h2 Opret ny chat
+form(method='POST', action='/create/chat')
+  input(type='text', name='chatName', placeholder='Indtast chatnavn', required)
+  button(type='submit') Opret chat
+
+script(src='/assets/javascript/deleteScript.js')

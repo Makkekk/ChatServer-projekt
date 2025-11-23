@@ -1,6 +1,10 @@
 include header.pug
 
 h1 Velkommen til chatserveren!
-p Log ind for at fortsætte med at chatte.
+p Log ind for at fortsætte eller opret en ny bruger
 
-include loginForm.pug
+a(href="/login")
+  button Log ind
+
+a(href="/createAccount")
+  button Opret bruger
