@@ -5,16 +5,26 @@ h1 Velkommen, #{username}
 h2 Dine chats
 #chat-liste 
 
-
 if niveau === 3
-hr
-h2 Admisntrer brugere 
-div#user-liste
+  hr
+  h2 Administer brugere
+  if users && users.length > 0
+   ul
+  each user in users
+    // VIGTIGT: Vi giver hver <li> et unikt HTML-ID (f.eks. "user-row-12")
+    li(id=`user-row-${user.id}`) 
+      
+      span #{user.username} (Niveau: #{user.niveau})
+      
+      // Vi sender brugerens ID med ind i funktionen
+      button(type="button", onclick=`sletBruger('${user.id}')`) Slet
 
+  else
+    p Ingen brugere fundet.
 
 h2 Opret ny chat
 form(method='POST', action='/chat')
   input(type='text', name='chatName', placeholder='Indtast chatnavn', required)
   button(type='submit') Opret chat
 
-script(src='/assets/javascript/deleteScript.js')
+script(src='/assets/javaScript/deleteScript.js')
