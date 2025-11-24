@@ -1,8 +1,26 @@
 import express from "express";
-import { sendMessage } from "../controllers/messageController.js";
+import fs from "fs";
 
 const router = express.Router();
 
-router.post("/message", sendMessage);
+// POST send besked
+router.post("/message", (req, res) => {
+  const { chatId, messageText } = req.body;
+
+  const messages = JSON.parse(fs.readFileSync("./JsonModeller/messages.json"));
+
+  const newMessage = {
+    id: Date.now().toString(),
+    chatId,
+    sender: req.session.user.username,
+    text: messageText,
+    date: new Date().toLocaleString()
+  };
+
+  messages.push(newMessage);
+  fs.writeFileSync("./JsonModeller/messages.json", JSON.stringify(messages));
+
+  res.json(newMessage);
+});
 
 export default router;
