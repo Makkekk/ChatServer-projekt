@@ -3,7 +3,7 @@ async function sletChat(chatId) {
 
     const res = await fetch("/chat/" + chatId, { method: "DELETE" });
     if (res.ok) {
-        document.querySelector("#chat-" + chatId)?.remove();
+        document.querySelector("#chat-" + chatId).remove();
         alert("Chat slettet");
     } else {
         const data = await res.json();

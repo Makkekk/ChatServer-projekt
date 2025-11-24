@@ -18,7 +18,7 @@ router.get("/listeSide", (req, res) => {
   });
 });
 
-// POST /chat (REST CREATE)
+// POST /create chat
 router.post("/", (req, res) => {
   const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
 

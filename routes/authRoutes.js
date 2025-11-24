@@ -22,7 +22,8 @@ router.get("/", (req, res) => {
 });
 
 // GET /loginForm
-router.get("/loginForm", (req, res) => res.render("includes/loginForm"));
+router.get("/loginForm", (req, res) => 
+    res.render("includes/loginForm"));
 
 // POST /loginForm
 router.post("/loginForm", (req, res) => {
@@ -50,7 +51,7 @@ router.get("/createAccount", (req, res) => {
 });
 
 // POST /createAccount
-router.post("/opret-bruger", (req, res) => {
+router.post("/createAccount", (req, res) => {
   const { brugernavn, adgangskode } = req.body;
 
   const users = JSON.parse(fs.readFileSync("./JsonModeller/users.json"));
