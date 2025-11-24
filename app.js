@@ -20,7 +20,7 @@ app.use(
   })
 );
 
-app.use("/assets", express.static("./public/assets"));
+app.use("/assets", express.static("./assets"));
 
 // --- ROUTES ---
 app.use("/", authRoutes);      // login, logout, create user, homepage
