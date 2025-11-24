@@ -4,10 +4,11 @@ h1 Velkommen, #{username}
 
 h2 Dine chats
 ul
-  if chats.length > 0
+  if chats && chats.length > 0
     each chat in chats
       li(id='chat-' + chat.id)
         a(href='/chat/' + chat.id) #{chat.name}
+        //- Only show delete button if niveau allows it
         if niveau === 3 || (niveau === 2 && chat.ejer === username)
           button(type='button', onclick=`sletChat('${chat.id}')`) Slet chat
   else
@@ -24,7 +25,7 @@ if niveau === 3
     p Ingen brugere fundet.
 
 h2 Opret ny chat
-form(method='POST', action='/create/chat')
+form(method='POST', action='/chat')
   input(type='text', name='chatName', placeholder='Indtast chatnavn', required)
   button(type='submit') Opret chat
 

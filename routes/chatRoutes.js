@@ -4,13 +4,13 @@ import fs from "fs";
 const router = express.Router();
 
 // GET /chat/create → page
-router.get("/createChat", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
+router.get("/listeSide", (req, res) => {
+  if (!req.session.user) return res.redirect("/loginForm");
 
   const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
   const userChats = chats.filter(chat => chat.ejer === req.session.user.username);
 
-  res.render("includes/createChat", {
+  res.render("includes/listeSide", {
     username: req.session.user.username,
     niveau: req.session.user.niveau,
     chats: userChats,
@@ -32,12 +32,12 @@ router.post("/", (req, res) => {
 
   chats.push(newChat);
   fs.writeFileSync("./JsonModeller/chats.json", JSON.stringify(chats));
-  res.redirect("/chat/createChat");
+  res.redirect("/chat/listeSide");
 });
 
-// GET /chat/:chatId (REST READ)
+// GET /chat/:chatId 
 router.get("/:chatId", (req, res) => {
-  if (!req.session.user) return res.redirect("/login");
+  if (!req.session.user) return res.redirect("/loginForm");
 
   const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
   const chat = chats.find(c => c.id === req.params.chatId);

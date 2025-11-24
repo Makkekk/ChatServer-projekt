@@ -20,11 +20,11 @@ router.get("/", (req, res) => {
   });
 });
 
-// GET /login
-router.get("/login", (req, res) => res.render("includes/login"));
+// GET /loginForm
+router.get("/loginForm", (req, res) => res.render("includes/loginForm"));
 
-// POST /login
-router.post("/login", (req, res) => {
+// POST /loginForm
+router.post("/loginForm", (req, res) => {
   const { brugernavn, adgangskode } = req.body;
   const users = JSON.parse(fs.readFileSync("./JsonModeller/users.json"));
 
@@ -40,10 +40,10 @@ router.post("/login", (req, res) => {
 
 // GET /logout
 router.get("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("/login"));
+  req.session.destroy(() => res.redirect("/"));
 });
 
-// GET /createAccount → create account page
+// GET /createAccount 
 router.get("/createAccount", (req, res) => {
   res.render("includes/createAccount");
 });
@@ -67,7 +67,8 @@ router.post("/opret-bruger", (req, res) => {
 
   users.push(newUser);
   fs.writeFileSync("./JsonModeller/users.json", JSON.stringify(users));
-  res.redirect("/login");
+  res.redirect("/loginForm");
 });
+
 
 export default router;
