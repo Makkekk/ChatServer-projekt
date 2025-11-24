@@ -41,3 +41,15 @@ button{
     cursor: pointer;
 
 }
+
+label{
+    margin: 5px 0;
+    font-size: medium;
+    font-weight: bold;
+}
+
+h1{
+
+    color: chocolate;
+    margin-bottom: 10px;
+}
