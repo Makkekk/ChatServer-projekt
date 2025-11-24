@@ -11,12 +11,13 @@ router.get("/", (req, res) => {
 
   const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
   const userChats = chats.filter(chat => chat.ejer === req.session.user.username);
+  const users = JSON.parse(fs.readFileSync("./JsonModeller/users.json"));
 
   res.render("includes/listeSide", {
     username: req.session.user.username,
     niveau: req.session.user.niveau,
     chats: userChats,
-    users: []
+    users: users
   });
 });
 
