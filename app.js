@@ -32,5 +32,4 @@ app.use("/api", userAPI); // User API routes
 // START SERVER
 const server = app.listen(8080, () => console.log("Server running on http://localhost:8080"));
 
-// DEBUG: Keep the process alive manually to debug the immediate exit issue
-setInterval(() => {}, 1000 * 60 * 60);
+
