@@ -2,6 +2,9 @@ import express from "express";
 import fs from "fs";
 const router = express.Router();
 
+
+const chatsData = JSON.parse(fs.readFileSync());
+
 // get chats
 router.get("/chats", (req, res) => {
     const chats = fs.readFileSync("./JsonModeller/chats.json");
@@ -40,6 +43,7 @@ router.get("/chat/:id/messages", (req, res) => {
     text: req.body.messageText,
     date: new Date().toLocaleString()
   };
+  
   messagesData.push(newMessage);
   fs.writeFileSync("./JsonModeller/messages.json", JSON.stringify(messagesData));
   res.json(newMessage);
@@ -62,6 +66,4 @@ router.delete("/chat/:id", (req, res) => {
     fs.writeFileSync("./JsonModeller/messages.json", JSON.stringify(filteredMessages));
 
     res.sendStatus(204);
-
 })
-
