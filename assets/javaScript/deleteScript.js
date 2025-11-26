@@ -1,41 +1,55 @@
-async function sletChat(chatId) {
-    if (!confirm("Er du sikker?")) return;
+async function createChat() {
+    const createForm = document.getElementById("createChatForm");
+    
+    if (createForm) {
+        createForm.addEventListener("submit", async (event) => {
+            event.preventDefault(); // Stop siden i at reloade
 
-    const res = await fetch("/chat/" + chatId, { method: "DELETE" });
-    if (res.ok) {
-        document.querySelector("#chat-" + chatId).remove();
-        alert("Chat slettet");
-    } else {
-        const data = await res.json();
-        alert("Fejl: " + (data.error || "Kunne ikke slette"));
-    }
-}
+            const inputField = createForm.querySelector("input[name='chatName']");
+            const chatName = inputField.value;
 
-async function sletBruger(id) {
-    // 1. Sikkerheds-tjek
-    if (!confirm("Er du sikker på, at du vil slette denne bruger?")) return;
+            if (!chatName) return; 
 
-    try {
-        // 2. Send besked til serveren
-        const response = await fetch(`/users/${id}`, { 
-            method: "DELETE" 
-        });
+            try {
+                // 1. Send data til serveren
+                const res = await fetch("/chats", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ name: chatName }) 
+                });
 
-        // 3. Håndter svaret
-        if (response.ok) {
-            // Succes: Find elementet fra Trin 2 og fjern det
-            const element = document.getElementById(`user-row-${id}`);
-            if (element) {
-                element.remove();
+                if (res.ok) {
+                    // 2. Hent den nye chat (ID og navn) fra serverens svar
+                    const newChat = await res.json();
+
+                    // 3. MANUEL DOM MANIPULATION (I stedet for loadChats)
+                    const chatList = document.getElementById("chatList");
+                    
+                    // Hvis listen var tom ("Ingen chats endnu"), tøm den først
+                    if (chatList.innerHTML.includes("Ingen chats")) {
+                        chatList.innerHTML = "";
+                    }
+
+                    // Opret nyt li element
+                    const li = document.createElement("li");
+                    // Sæt ID (så slet-funktionen virker senere)
+                    li.id = `chat-${newChat.id}`; 
+                    // Lav linket - Sørg for at URL matcher din view route (/room/ eller /chat/)
+                    li.innerHTML = `<a href="/room/${newChat.id}">${newChat.name}</a>`;
+                    
+                    // Tilføj elementet til listen (bunden)
+                    chatList.appendChild(li);
+
+                    // Tøm input feltet
+                    inputField.value = "";
+                } else {
+                    alert("Fejl: Kunne ikke oprette chat");
+                }
+            } catch (err) {
+                console.error("Error creating chat:", err);
             }
-            alert("Brugeren er slettet.");
-        } else {
-            // Fejl fra serveren
-            const data = await response.json();
-            alert("Fejl: " + data.error);
-        }
-    } catch (err) {
-        console.error("Netværksfejl:", err);
-        alert("Der skete en teknisk fejl.");
+        });
     }
 }
+
+document.addEventListener("DOMContentLoaded", createChat);
