@@ -5,6 +5,7 @@ import authRoutes from "./routes/authRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import userAPI from "./routes/userAPI.js"; // Import userAPI
+import chatAPI from "./routes/chatAPI.js"; // Import chatAPI
 
 const app = express();
 
@@ -28,8 +29,12 @@ app.use("/", authRoutes);      // login, logout, create user, homepage
 app.use("/chat", chatRoutes);  // chat CRUD
 app.use("/chat", messageRoutes); // messages inside chats
 app.use("/api", userAPI); // User API routes
+app.use("/api/chats", chatAPI); // Chat API routes
 
 // START SERVER
-const server = app.listen(8080, () => console.log("Server running on http://localhost:8080"));
+app.listen(8080, () => console.log("Server running on http://localhost:8080"));
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6f8a0e8 (levmeddet)

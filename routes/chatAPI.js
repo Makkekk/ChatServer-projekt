@@ -1,64 +1,43 @@
 import express from "express";
-import fs from "fs";
+import { getChats, getMessages, getUsers } from "../utils/db.js";
+
 const router = express.Router();
 
-// import JSON-objekter
-const chatsJson = fs.readFileSync('./JsonModeller/chats.json');
-const chatsListe = JSON.parse(chatsJson);
+// GET /api/chats - Returns chats filtered by user permission
+router.get("/", (req, res) => {
+  if (!req.session.user) return res.status(401).json({ error: "Unauthorized" });
 
-// get chats
-router.get("/chats", (req, res) => {
+  const chats = getChats();
+  let visibleChats = [];
 
-    res.json(chatsListe);
+  if (req.session.user.niveau === 3) {
+      // Admin: Ser alle chats
+      visibleChats = chats;
+  } else {
+      // Andre: Ser kun egne chats
+      visibleChats = chats.filter(chat => chat.ejer === req.session.user.username);
+  }
+  
+  res.json(visibleChats);
 });
 
-//get /chat/:id
-router.get("/chats/:id", (req, res) => {
-    const chatId = req.params.id;
-    const chats = fs.readFileSync("./JsonModeller/chats.json");
-    const chatsData = JSON.parse(chats);
-    const chat = chatsData.find(c => c.id === chatId);
+// GET /api/chats/:id - Returns a specific chat as JSON
+router.get("/:id", (req, res) => {
+  const chatId = req.params.id;
+  const chats = getChats();
+  const chat = chats.find(c => c.id === chatId);
 
-    if (!chat) return res.status(404).send("Chat not found");
+  if (!chat) return res.status(404).json({ error: "Chat not found" });
 
-    res.json(chat);
-})
-
-router.get("/chats/messages/:id", (req, res) => {
-    const chatId = req.params.id;
-    const messages = fs.readFileSync("./JsonModeller/messages.json");
-    const messagesData = JSON.parse(messages);  
-    const chatMessages = messagesData.filter(m => m.chatId === chatId);
-    res.json(chatMessages)
-})
-
-router.get("/chats/:id/messages", (req, res) => {
-const id = req.params.id;
-const chat = chatsListe.find(chat=>{
-    return chat.id === id;
-}) 
-if (!chat){
-    res.status(404).send('Chatten blev ikke fundet');
-} else {
-    res.json(chat.messages)
-}
+  res.json(chat);
 });
 
-// delete /chat/:id
-router.delete("/chats/:id", (req, res) => {
-    const chat = fs.readFileSync("./JsonModeller/chats.json");
-    const chatData = JSON.parse(chat);
+// GET /api/chats/:id/messages - Returns messages for a specific chat as JSON
+router.get("/:id/messages", (req, res) => {
+  const chatId = req.params.id;
+  const messages = getMessages();
+  const chatMessages = messages.filter(m => m.chatId === chatId); // Assuming messages have a chatId
+  res.json(chatMessages);
+});
 
-    const findChat = chatData.findIndex(c => c.id === req.params.id);
-    if (findChat === -1) return res.status(404).send("Chat not found");
-
-    chatsData.splice(findChat, 1);
-    fs.writeFileSync("./JsonModeller/chats.json", JSON.stringify(chatsData));
-
-    const messages = fs.readFileSync("./JsonModeller/messages.json");
-    const messagesData = JSON.parse(messages);
-    const filteredMessages = messagesData.filter(m => m.chatId !== req.params.id);
-    fs.writeFileSync("./JsonModeller/messages.json", JSON.stringify(filteredMessages));
-
-    res.sendStatus(204);
-})
+export default router;

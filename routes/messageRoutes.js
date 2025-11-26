@@ -4,7 +4,7 @@ import { getMessages, saveMessages } from "../utils/db.js";
 const router = express.Router();
 
 // POST send besked
-router.post("/chats/message", (req, res) => {
+router.post("/message", (req, res) => {
   const chatId = req.body.chatId;
   const messageText = req.body.messageText;
 
