@@ -4,6 +4,7 @@ import session from "express-session";
 import authRoutes from "./routes/authRoutes.js";
 import chatRoutes from "./routes/chatRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
+import userAPI from "./routes/userAPI.js"; // Import userAPI
 
 const app = express();
 
@@ -26,6 +27,10 @@ app.use("/assets", express.static("./assets"));
 app.use("/", authRoutes);      // login, logout, create user, homepage
 app.use("/chat", chatRoutes);  // chat CRUD
 app.use("/chat", messageRoutes); // messages inside chats
+app.use("/api", userAPI); // User API routes
 
 // START SERVER
-app.listen(8080, () => console.log("Server running on http://localhost:8080"));
+const server = app.listen(8080, () => console.log("Server running on http://localhost:8080"));
+
+// DEBUG: Keep the process alive manually to debug the immediate exit issue
+setInterval(() => {}, 1000 * 60 * 60);
