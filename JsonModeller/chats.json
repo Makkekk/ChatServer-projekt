@@ -1,48 +1,5 @@
 [
   {
-    "id": "1763893433733",
-    "name": "test2",
-    "ejer": "test1",
-    "oprettelsesDato": "2025-11-23T10:23:53.733Z",
-    "messages": [
-      {
-        "id": "1764160537590",
-        "chatId": "1763893433733",
-        "sender": "admin",
-        "text": "hej",
-        "date": "26.11.2025, 13.35.37"
-      },
-      {
-        "id": "1764160562475",
-        "chatId": "1763893433733",
-        "sender": "admin",
-        "text": "hva skal der ske",
-        "date": "26.11.2025, 13.36.02"
-      },
-      {
-        "id": "1764166759191",
-        "chatId": "1763893433733",
-        "sender": "admin",
-        "text": "hej",
-        "date": "26.11.2025, 15.19.19"
-      },
-      {
-        "id": "1764166790179",
-        "chatId": "1763893433733",
-        "sender": "karsten",
-        "text": "hej",
-        "date": "26.11.2025, 15.19.50"
-      },
-      {
-        "id": "1764170393735",
-        "chatId": "1763893433733",
-        "sender": "admin",
-        "text": "132",
-        "date": "26.11.2025, 16.19.53"
-      }
-    ]
-  },
-  {
     "id": "1763980442204",
     "name": "test2",
     "ejer": "admin",
@@ -125,49 +82,5 @@
     "ejer": "admin",
     "oprettelsesDato": "2025-11-26T10:20:22.999Z",
     "messages": []
-  },
-  {
-    "id": "1764152474975",
-    "name": "123",
-    "ejer": "admin",
-    "oprettelsesDato": "2025-11-26T10:21:14.975Z",
-    "messages": []
-  },
-  {
-    "id": "1764152540903",
-    "name": "test",
-    "ejer": "admin",
-    "oprettelsesDato": "2025-11-26T10:22:20.903Z",
-    "messages": []
-  },
-  {
-    "id": "1764164355099",
-    "name": "yas",
-    "ejer": "karsten",
-    "oprettelsesDato": "2025-11-26T13:39:15.099Z"
-  },
-  {
-    "id": "1764164355100",
-    "name": "yas",
-    "ejer": "karsten",
-    "oprettelsesDato": "2025-11-26T13:39:15.100Z"
-  },
-  {
-    "id": "1764165487803",
-    "name": "yas2",
-    "ejer": "karsten",
-    "oprettelsesDato": "2025-11-26T13:58:07.803Z"
-  },
-  {
-    "id": "1764165487805",
-    "name": "yas2",
-    "ejer": "karsten",
-    "oprettelsesDato": "2025-11-26T13:58:07.805Z"
-  },
-  {
-    "id": "1764166916859",
-    "name": "hej",
-    "ejer": "karsten",
-    "oprettelsesDato": "2025-11-26T14:21:56.859Z"
   }
 ]

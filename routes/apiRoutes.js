@@ -68,11 +68,6 @@ router.delete("/chats/:id", (req, res) => {
         chats.splice(index, 1);
         saveChats(chats);
         
-        // Clean up messages
-        const allMessages = getChats().flatMap(c => c.messages);
-        const remainingMessages = allMessages.filter(m => m.chatId !== req.params.id);
-        saveMessages(remainingMessages);
-        
         res.json({ success: true });
     } else {
         res.status(403).json({ error: "Permission denied" });

@@ -53,5 +53,4 @@ async function deleteUser(userId) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", deleteChat)
 
