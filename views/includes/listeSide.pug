@@ -1,9 +1,13 @@
 include header.pug
 
+script. 
+  const currentUser = "#{username}";
+  const userNiveau = #{niveau};
+
 h1 Velkommen, #{username}
 
 h2 Dine chats
-// We leave this empty because load.js fills it
+
 ul#chatList
   li Indlæser chats...
 
@@ -22,4 +26,4 @@ form(id="createChatForm")
 
 script(src='/assets/javaScript/deleteScript.js')
 script(src='/assets/javaScript/load.js')
-script(src='/assets/javaScript/Create.js')
+script(src='/assets/javaScript/create.js')

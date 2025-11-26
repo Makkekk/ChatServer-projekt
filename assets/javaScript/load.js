@@ -1,38 +1,51 @@
 // --- LOAD CHATS (til listesiden) ---
 async function loadChats() {
     const container = document.querySelector("#chatList");
-    if (!container) return; 
+    if (!container) return;
 
     try {
-        const res = await fetch("/chats"); // API Endpoint
-        
+        const res = await fetch("/chats"); 
         if (!res.ok) throw new Error(`Error: ${res.status}`);
-        
+
         const chats = await res.json();
-        
-        // Clearing is fine with innerHTML or textContent
-        container.textContent = ''; 
+
+       
+        container.textContent = '';
 
         if (chats.length === 0) {
             const li = document.createElement("li");
             li.textContent = "Ingen chats fundet.";
             container.appendChild(li);
             return;
+        } else {
+
+            chats.forEach(chat => {
+                const li = document.createElement("li")
+                li.id = `chat-${chat.id}`;
+
+                // 
+                const a = document.createElement("a")
+
+                a.href = `/chat/${chat.id}`
+                a.textContent = chat.name // Safe against XSS
+
+                li.appendChild(a);
+
+                if (currentUser && (currentUser.niveau === 3 || (currentUser.niveau === 2 && chat.ejer === currentUser.username))) {
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.type = "button";
+                    deleteBtn.textContent = "Slet";
+
+                    deleteBtn.onclick = function () {
+                        deleteChat(chat.id);
+                    };
+
+                    li.appendChild(deleteBtn);
+                }
+
+                container.appendChild(li)
+            });
         }
-
-        chats.forEach(chat => {
-            const li = document.createElement("li");
-            li.id = `chat-${chat.id}`; 
-
-            // Create the link element securely
-            const a = document.createElement("a");
-            // IMPORTANT: Point to the VIEW route (singular /chat/), not the API
-            a.href = `/chats/${chat.id}`; 
-            a.textContent = chat.name; // Safe against XSS
-
-            li.appendChild(a);
-            container.appendChild(li);
-        });
     } catch (e) {
         console.error("Failed to load chats", e);
         const li = document.createElement("li");
@@ -40,17 +53,16 @@ async function loadChats() {
         container.appendChild(li);
     }
 }
-
 // --- LOAD USERS (For Admin) ---
 async function loadusers() {
     const container = document.querySelector("#userList");
-    if (!container) return; 
+    if (!container) return;
 
     try {
         const res = await fetch("/users");
-        
-        if (res.status === 403) return; 
-        
+
+        if (res.status === 403) return;
+
         const users = await res.json();
         container.textContent = '';
 
@@ -67,7 +79,7 @@ async function loadusers() {
             btn.type = "button";
             btn.textContent = "Slet";
             // Assign function reference directly
-            btn.onclick = function() { sletBruger(user.id); }; 
+            btn.onclick = function () { sletBruger(user.id); };
 
             li.appendChild(span);
             li.appendChild(btn);
@@ -85,7 +97,7 @@ async function loadMessages(chatId) {
     try {
         const res = await fetch(`/chats/${chatId}/messages`);
         const messages = await res.json();
-        
+
         const container = document.querySelector("#messages");
         container.textContent = '';
 
@@ -99,29 +111,29 @@ async function loadMessages(chatId) {
         messages.forEach(message => {
             const p = document.createElement("p");
 
-            
+
             const strong = document.createElement("strong");
             strong.textContent = `${message.sender}: `;
 
-            
+
             const textNode = document.createTextNode(message.text);
 
-            
+
             const br = document.createElement("br");
 
-            
+
             const small = document.createElement("small");
             small.textContent = message.date;
 
             // Assemble the paragraph
             p.appendChild(strong);
-            p.appendChild(textNode); 
+            p.appendChild(textNode);
             p.appendChild(br);
             p.appendChild(small);
 
             container.appendChild(p);
         });
-        
+
         container.scrollTop = container.scrollHeight;
 
     } catch (err) {
@@ -130,11 +142,5 @@ async function loadMessages(chatId) {
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
-    loadChats();
-    loadusers();
-
-    if (typeof currentChatId !== 'undefined') {
-        loadMessages(currentChatId);
-    }
-});
+document.addEventListener("DOMContentLoaded", loadChats);
+document.addEventListener("DOMContentLoaded", loadusers);

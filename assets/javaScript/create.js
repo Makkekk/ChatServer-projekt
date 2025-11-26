@@ -1,15 +1,14 @@
 async function createChat() {
-const createForm = document.getElementById("createChatForm");
+    const createForm = document.getElementById("createChatForm");
     
     if (createForm) {
         createForm.addEventListener("submit", async (event) => {
+            event.preventDefault(); 
 
             const inputField = createForm.querySelector("input[name='chatName']");
             const chatName = inputField.value;
-            event.preventDefault(); // Prevent default form submission
 
             try {
-                // 1. Send RESTful POST request 
                 const res = await fetch("/chats", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -17,8 +16,31 @@ const createForm = document.getElementById("createChatForm");
                 });
 
                 if (res.ok) {
-                    // 2. DOM Manipulation: Clear input and reload list 
-                    inputField.value = "";
+                    // Hent den nye chat (objektet) som serveren sender tilbage
+                    const newChat = await res.json();
+
+                    // --- DOM MANIPULATION START ---
+                    // Vi finder listen og tilføjer den nye chat manuelt
+                    const container = document.querySelector("#chatList");
+                    
+                    // Fjern "Ingen chats fundet" hvis den er der
+                    if (container.firstChild && container.firstChild.textContent === "Ingen chats fundet.") {
+                        container.innerHTML = "";
+                    }
+
+                    const li = document.createElement("li");
+                    li.id = `chat-${newChat.id}`; // Brug ID fra serveren
+
+                    const a = document.createElement("a");
+                    // VIGTIGT: Her sikrer vi, at linket matcher viewRoutes (/chat/ og ikke /room/ eller /chats/)
+                    a.href = `/chat/${newChat.id}`; 
+                    a.textContent = newChat.name;
+
+                    li.appendChild(a);
+                    container.appendChild(li);
+                    // --- DOM MANIPULATION SLUT ---
+
+                    inputField.value = ""; // Tøm feltet
                 } else {
                     alert("Fejl: Kunne ikke oprette chat");
                 }
@@ -28,7 +50,6 @@ const createForm = document.getElementById("createChatForm");
         });
     }
 }
-document.addEventListener("DOMContentLoaded", createChat);  
 
 
 async function createAccount() {
@@ -61,4 +82,5 @@ async function createAccount() {
         });
     }
 }
-document.addEventListener("DOMContentLoaded", createAccount);  
+document.addEventListener("DOMContentLoaded", createChat);
+document.addEventListener("DOMContentLoaded", createAccount);
