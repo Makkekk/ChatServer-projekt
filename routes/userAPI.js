@@ -6,6 +6,9 @@ const router = express.Router();
 
 // GET /users
 router.get("/users", (req, res) => {
+  if (!req.session.user || req.session.user.niveau !== 3) {
+    return res.status(403).json({ error: "Adgang nægtet" });
+  }
   const users = getUsers();
   res.json(users);
 });

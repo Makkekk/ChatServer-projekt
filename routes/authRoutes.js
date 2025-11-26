@@ -1,5 +1,5 @@
 import express from "express";
-import { getUsers, saveUsers, getChats } from "../utils/db.js";
+import { getUsers, saveUsers } from "../utils/db.js";
 
 const router = express.Router();
 
@@ -8,17 +8,9 @@ router.get("/", (req, res) => {
   if (!req.session.user) {
     return res.render("includes/landingPage");
   }
-
-  const chats = getChats();
-  const userChats = chats.filter(chat => chat.ejer === req.session.user.username);
-  const users = getUsers();
-
-  res.render("includes/listeSide", {
-    username: req.session.user.username,
-    niveau: req.session.user.niveau,
-    chats: userChats,
-    users: users
-  });
+  
+  // If user is logged in, redirect to the chat list
+  res.redirect("/chat");
 });
 
 // GET /loginForm

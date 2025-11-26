@@ -1,22 +1,19 @@
 import express from "express";
-import { getChats, saveChats, getMessages, saveMessages } from "../utils/db.js";
+import { getChats, saveChats, getMessages, saveMessages, getUsers } from "../utils/db.js";
 
 
 const router = express.Router();
 
-// GET /chat/ -> List of chats (RESTful: Collection resource)
-// Previously /chat/listeSide
+// GET /chat/ -> List of chats
 router.get("/", (req, res) => {
   if (!req.session.user) return res.redirect("/loginForm");
 
-  const chats = getChats();
-  const userChats = chats.filter(chat => chat.ejer === req.session.user.username);
-
+  // Vi sender kun bruger-info, data hentes via API (load.js)
   res.render("includes/listeSide", {
     username: req.session.user.username,
     niveau: req.session.user.niveau,
-    chats: userChats,
-    users: []
+    chats: [], // JS henter dette
+    users: []  // JS henter dette (hvis admin)
   });
 });
 

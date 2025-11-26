@@ -3,7 +3,7 @@ async function sendMessage(chatId) {
     const text = textarea.value;
     if (!text) return;
 
-    const res = await fetch("/chats/message", {
+    const res = await fetch("/chat/message", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ chatId, messageText: text })
