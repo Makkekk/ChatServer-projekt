@@ -2,14 +2,17 @@ include header.pug
 
 div(id='main-container')
     h1 Log ind på din konto
-    form(action="/loginForm" method="post")
-        label(for="brugernavn") Brugernavn:
-        input(type="text" id="brugernavn" name="brugernavn")
+    form(id="loginForm")
+        label(for="username") Brugernavn:
+        input(type="text" id="username" name="username")
     
-        label(for="adgangskode") Adgangskode:
-        input(type="password" id="adgangskode" name="adgangskode")
+        label(for="password") Adgangskode:
+        input(type="password" id="password" name="password")
+
         button(type="submit") Log ind
     
     p Hvis du ikke har en konto, kan du
         a(href="/createAccount")
             button(type="button") Tilmeld dig
+
+script(src='/assets/javaScript/login.js')

@@ -4,32 +4,34 @@ import { getUsers, saveUsers } from "../utils/db.js";
 const router = express.Router();
 
 router.post("/loginForm", (req, res) => {
-    const { brugernavn, adgangskode } = req.body;
+    const username = req.body.username;
+    const password = req.body.password;
+
     const users = getUsers();
-    const user = users.find(u => u.username === brugernavn && u.password === adgangskode);
+    const user = users.find(u => u.username === username && u.password === password);
 
     if (!user) return res.status(401).send("Wrong login");
     
     req.session.user = user;
-    res.redirect("/");
+    res.sendStatus(200);
 });
 
 router.post("/createAccount", (req, res) => {
-    const { brugernavn, adgangskode } = req.body;
+    const username = req.body.username;
+    const password = req.body.password;
     const users = getUsers();
     
-    if (users.find(u => u.username === brugernavn)) return res.status(409).send("User exists");
-
+    if (users.find(u => u.username === username)) return res.status(409).send("User exists");
     const newUser = {
         id: Date.now().toString(),
-        username: brugernavn,
-        password: adgangskode,
+        username: username,
+        password: password,
         niveau: 1, 
         dato: new Date()
     };
     users.push(newUser);
     saveUsers(users);
-    res.redirect("/loginForm");
+    res.sendStatus(201);
 });
 
 router.get("/logout", (req, res) => {

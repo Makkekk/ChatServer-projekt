@@ -4,7 +4,22 @@
     "name": "test2",
     "ejer": "test1",
     "oprettelsesDato": "2025-11-23T10:23:53.733Z",
-    "messages": []
+    "messages": [
+      {
+        "id": "1764160537590",
+        "chatId": "1763893433733",
+        "sender": "admin",
+        "text": "hej",
+        "date": "26.11.2025, 13.35.37"
+      },
+      {
+        "id": "1764160562475",
+        "chatId": "1763893433733",
+        "sender": "admin",
+        "text": "hva skal der ske",
+        "date": "26.11.2025, 13.36.02"
+      }
+    ]
   },
   {
     "id": "1763980442204",
@@ -105,34 +120,27 @@
     "messages": []
   },
   {
-    "id": "1764153305502",
-    "name": "jeg håber du virker",
-    "ejer": "admin",
-    "oprettelsesDato": "2025-11-26T10:35:05.502Z",
-    "messages": []
+    "id": "1764164355099",
+    "name": "yas",
+    "ejer": "karsten",
+    "oprettelsesDato": "2025-11-26T13:39:15.099Z"
   },
   {
-    "id": "1764158092031",
-    "name": "123",
-    "ejer": "admin",
-    "oprettelsesDato": "2025-11-26T11:54:52.031Z"
+    "id": "1764164355100",
+    "name": "yas",
+    "ejer": "karsten",
+    "oprettelsesDato": "2025-11-26T13:39:15.100Z"
   },
   {
-    "id": "1764158092033",
-    "name": "123",
-    "ejer": "admin",
-    "oprettelsesDato": "2025-11-26T11:54:52.033Z"
+    "id": "1764165487803",
+    "name": "yas2",
+    "ejer": "karsten",
+    "oprettelsesDato": "2025-11-26T13:58:07.803Z"
   },
   {
-    "id": "1764158132871",
-    "name": "da",
-    "ejer": "test1",
-    "oprettelsesDato": "2025-11-26T11:55:32.872Z"
-  },
-  {
-    "id": "1764158132873",
-    "name": "da",
-    "ejer": "test1",
-    "oprettelsesDato": "2025-11-26T11:55:32.873Z"
+    "id": "1764165487805",
+    "name": "yas2",
+    "ejer": "karsten",
+    "oprettelsesDato": "2025-11-26T13:58:07.805Z"
   }
 ]

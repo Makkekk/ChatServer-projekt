@@ -1,59 +1,76 @@
-// --- LOAD CHATS (For the ListeSide) ---
+// --- LOAD CHATS (til listesiden) ---
 async function loadChats() {
     const container = document.querySelector("#chatList");
-    if (!container) return; // Stop if we are not on the list page
+    if (!container) return; 
 
     try {
-        // PDF Requirement: GET /chats [cite: 22]
-        const res = await fetch("/chats"); 
+        const res = await fetch("/chats"); // API Endpoint
         
         if (!res.ok) throw new Error(`Error: ${res.status}`);
         
         const chats = await res.json();
-        container.innerHTML = '';
+        
+        // Clearing is fine with innerHTML or textContent
+        container.textContent = ''; 
 
         if (chats.length === 0) {
-            container.innerHTML = '<li>Ingen chats fundet.</li>';
+            const li = document.createElement("li");
+            li.textContent = "Ingen chats fundet.";
+            container.appendChild(li);
             return;
         }
 
         chats.forEach(chat => {
             const li = document.createElement("li");
-            li.id = `chat-${chat.id}`; // Add ID for delete logic
-            // Link goes to the HTML view route
-            li.innerHTML = `<a href="/room/${chat.id}">${chat.name}</a>`;
-            
-            // Optional: Add delete button here dynamically if you want
-            // (Requires checking user level in JS or hiding via CSS)
+            li.id = `chat-${chat.id}`; 
+
+            // Create the link element securely
+            const a = document.createElement("a");
+            // IMPORTANT: Point to the VIEW route (singular /chat/), not the API
+            a.href = `/chats/${chat.id}`; 
+            a.textContent = chat.name; // Safe against XSS
+
+            li.appendChild(a);
             container.appendChild(li);
         });
     } catch (e) {
         console.error("Failed to load chats", e);
-        container.innerHTML = '<li>Kunne ikke hente chats.</li>';
+        const li = document.createElement("li");
+        li.textContent = "Kunne ikke hente chats.";
+        container.appendChild(li);
     }
 }
 
 // --- LOAD USERS (For Admin) ---
 async function loadusers() {
     const container = document.querySelector("#userList");
-    if (!container) return; // Stop if not admin/no container
+    if (!container) return; 
 
     try {
-        // PDF Requirement: GET /users [cite: 30]
         const res = await fetch("/users");
         
-        if (res.status === 403) return; // Ignore if not admin
+        if (res.status === 403) return; 
         
         const users = await res.json();
-        container.innerHTML = '';
+        container.textContent = '';
 
         users.forEach(user => {
             const li = document.createElement("li");
             li.id = `user-row-${user.id}`;
-            li.innerHTML = `
-                <span>${user.username} (Niveau: ${user.niveau}) </span>
-                <button type="button" onclick="sletBruger('${user.id}')">Slet</button>
-            `;
+
+            // Create Span for info
+            const span = document.createElement("span");
+            span.textContent = `${user.username} (Niveau: ${user.niveau}) `;
+
+            // Create Delete Button
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.textContent = "Slet";
+            // Assign function reference directly
+            btn.onclick = function() { sletBruger(user.id); }; 
+
+            li.appendChild(span);
+            li.appendChild(btn);
             container.appendChild(li);
         });
     } catch (e) {
@@ -66,25 +83,45 @@ async function loadMessages(chatId) {
     if (!chatId) return;
 
     try {
-        // PDF Requirement: GET /chats/:id/messages 
         const res = await fetch(`/chats/${chatId}/messages`);
         const messages = await res.json();
         
         const container = document.querySelector("#messages");
-        container.innerHTML = '';
+        container.textContent = '';
 
         if (messages.length === 0) {
-            container.innerHTML = '<p>Ingen beskeder endnu.</p>';
+            const p = document.createElement("p");
+            p.textContent = "Ingen beskeder endnu.";
+            container.appendChild(p);
             return;
         }
 
         messages.forEach(message => {
             const p = document.createElement("p");
-            p.innerHTML = `<strong>${message.sender}:</strong> ${message.text}<br><small>${message.date}</small>`;
+
+            
+            const strong = document.createElement("strong");
+            strong.textContent = `${message.sender}: `;
+
+            
+            const textNode = document.createTextNode(message.text);
+
+            
+            const br = document.createElement("br");
+
+            
+            const small = document.createElement("small");
+            small.textContent = message.date;
+
+            // Assemble the paragraph
+            p.appendChild(strong);
+            p.appendChild(textNode); 
+            p.appendChild(br);
+            p.appendChild(small);
+
             container.appendChild(p);
         });
         
-        // Scroll to bottom
         container.scrollTop = container.scrollHeight;
 
     } catch (err) {
@@ -92,13 +129,11 @@ async function loadMessages(chatId) {
     }
 }
 
-// --- MAIN EVENT LISTENER ---
+
 document.addEventListener("DOMContentLoaded", () => {
-    // 1. Load lists (if elements exist)
     loadChats();
     loadusers();
 
-    // 2. Load messages (Only if currentChatId is defined in the PUG file)
     if (typeof currentChatId !== 'undefined') {
         loadMessages(currentChatId);
     }

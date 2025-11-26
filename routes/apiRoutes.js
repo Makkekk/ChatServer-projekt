@@ -1,9 +1,9 @@
 import express from "express";
-import { getChats, saveChats, getMessages, saveMessages, getUsers, saveUsers } from "../utils/db.js";
+import { getChats, saveChats, getUsers, saveUsers } from "../utils/db.js";
 
 const router = express.Router();
 
-// Middleware to ensure user is logged in before accessing API
+// Middleware for at sikre om bruger er logget ind
 const checkAuth = (req, res, next) => {
     if (!req.session.user) return res.status(401).json({ error: "Unauthorized" });
     next();
@@ -11,18 +11,15 @@ const checkAuth = (req, res, next) => {
 
 router.use(checkAuth);
 
-// --- CHATS [cite: 22-29] ---
 
-// GET /chats (List all chats)
+// GET /chats (Lise af alle chats)
 router.get("/chats", (req, res) => {
     const chats = getChats();
-    // Level 1+: Can see chats. 
-    // PDF implies filtering based on ownership happens in logic or view, 
-    // but usually, Level 1 sees all or specific ones. Let's return all for the list.
+  
     res.json(chats);
 });
 
-// GET /chats/:id (Specific chat)
+// GET /chats/:id (Specifik chat)
 router.get("/chats/:id", (req, res) => {
     const chats = getChats();
     const chat = chats.find(c => c.id === req.params.id);
@@ -30,19 +27,21 @@ router.get("/chats/:id", (req, res) => {
     res.json(chat);
 });
 
-// GET /chats/:id/messages (Messages in a chat)
+// GET /chats/:id/messages (Beskeder i en chat)
 router.get("/chats/:id/messages", (req, res) => {
-    const messages = getMessages();
-    const chatMessages = messages.filter(m => m.chatId === req.params.id);
-    res.json(chatMessages);
+    const chats = getChats();
+    const chat = chats.find(c => c.id === req.params.id);
+
+    //retuner arrayet inde i chats
+    res.json(chat.messages);
 });
 
-// POST /chats (Create Chat - Implicit requirement for "oprettelse af chats")
+// POST /chats (Opret chat)
 router.post("/chats", (req, res) => {
     const chats = getChats();
     const newChat = {
         id: Date.now().toString(),
-        name: req.body.name, // Client sends { name: "..." }
+        name: req.body.name, 
         ejer: req.session.user.username,
         oprettelsesDato: new Date(),
     };
@@ -51,7 +50,7 @@ router.post("/chats", (req, res) => {
     res.json(newChat);
 });
 
-// DELETE /chats/:id (Delete Chat - Logic for Levels 2 & 3) [cite: 6, 7]
+// DELETE /chats/:id (slet chat for brugere med niveau 2 og 3)) 
 router.delete("/chats/:id", (req, res) => {
     const chats = getChats();
     const index = chats.findIndex(c => c.id === req.params.id);
@@ -60,9 +59,9 @@ router.delete("/chats/:id", (req, res) => {
     const chat = chats[index];
     const user = req.session.user;
 
-    // Level 3: Can delete ANY chat
-    // Level 2: Can delete OWN chat
-    // Level 1: Cannot delete
+    // Level 3: kan slette alle chats
+    // Level 2: kan slette egne chats
+    // Level 1: kan ikke slette chats
     const isOwner = chat.ejer === user.username;
     
     if (user.niveau === 3 || (user.niveau === 2 && isOwner)) {
@@ -80,30 +79,45 @@ router.delete("/chats/:id", (req, res) => {
     }
 });
 
-// POST /chats/message (Send message)
+// POST /chats/message (Send besekd)
 router.post("/chats/message", (req, res) => {
-    const { chatId, text } = req.body;
-    const messages = getMessages();
+    const chatid = req.body.chatId;
+    const text = req.body.text;
+   
+    const chats = getChats();
+    
+   
+    const chat = chats.find(c => c.id === chatid);
+    if (!chat) return res.status(404).json({ error: "Chat not found" });
+
+
     const newMessage = {
         id: Date.now().toString(),
-        chatId: chatId,
+        chatId: chatid, 
         sender: req.session.user.username,
         text: text,
         date: new Date().toLocaleString()
     };
-    messages.push(newMessage);
-    saveMessages(messages);
+
+    
+    if (!chat.messages) {
+      chat.messages = []; 
+    } else {
+    chat.messages.push(newMessage);
+    }
+    saveChats(chats);
+
     res.json(newMessage);
 });
 
 
 // GET /users (List users)
 router.get("/users", (req, res) => {
-    // Only Level 3 should see user list? 
+    
     if (req.session.user.niveau !== 3) return res.status(403).json({ error: "Admin only" });
     
     const users = getUsers();
-    // Don't send passwords!
+    
     const safeUsers = users.map(u => ({ id: u.id, username: u.username, niveau: u.niveau }));
     res.json(safeUsers);
 });

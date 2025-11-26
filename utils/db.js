@@ -24,5 +24,3 @@ export const saveChats = (chats) => writeJson("chats.json", chats);
 export const getUsers = () => readJson("users.json");
 export const saveUsers = (users) => writeJson("users.json", users);
 
-export const getMessages = () => readJson("messages.json");
-export const saveMessages = (messages) => writeJson("messages.json", messages);

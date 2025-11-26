@@ -29,3 +29,36 @@ const createForm = document.getElementById("createChatForm");
     }
 }
 document.addEventListener("DOMContentLoaded", createChat);  
+
+
+async function createAccount() {
+    const createForm = document.getElementById("createAccountForm");
+
+    if (createForm) {
+        createForm.addEventListener("submit", async (event) => {
+            event.preventDefault(); // Prevent default form submission
+            const usernameField = createForm.querySelector("input[name='username']");
+            const passwordField = createForm.querySelector("input[name='password']");
+            const username = usernameField.value;
+            const password = passwordField.value;
+
+            try {
+                // Send RESTful POST request to create account
+                const res = await fetch("/createAccount", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username: username, password: password }) 
+                });
+                if (res.ok) {
+                    alert("Bruger oprettet succesfuldt!");
+                    window.location.href = "/";
+                } else {
+                    alert("Fejl: Kunne ikke oprette bruger");
+                }
+            } catch (err) {
+                console.error("Error creating account:", err);
+            }
+        });
+    }
+}
+document.addEventListener("DOMContentLoaded", createAccount);  
