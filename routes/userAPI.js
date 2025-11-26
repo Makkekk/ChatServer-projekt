@@ -2,6 +2,7 @@ import express from "express";
 import fs from "fs";
 const router = express.Router();
 
+
 // GET /users
 router.get("/users", (req, res) => {
   const users = JSON.parse(fs.readFileSync("./JsonModeller/users.json"));
@@ -22,5 +23,7 @@ router.get("/users/:id/messages", (req, res) => {
   const userMessages = messages.filter(m => m.sender === req.params.id);
   res.json(userMessages);
 });
+
+//opret
 
 export default router;

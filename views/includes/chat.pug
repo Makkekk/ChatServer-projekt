@@ -6,19 +6,15 @@ p
 
 h2 Beskeder
 div#messages
-  if messages.length > 0
-    each message in messages
-      p
-        strong #{message.sender}: 
-        | #{message.text}
-        br
-        small #{message.date}
-  else
-    p Ingen beskeder endnu.
+  p Indlæser beskeder...
 
 h2 Send besked
 textarea(id='messageText', placeholder='Skriv din besked...')
 br
 button(type='button', onclick=`sendMessage('${chatId}')`) Send
 
+script.
+  const currentChatId = "#{chatId}";
+
+script(src='/assets/javascript/load.js')
 script(src='/assets/javascript/sendScript.js')

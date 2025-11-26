@@ -11,8 +11,6 @@ async function sletChat(chatId) {
     }
 }
 
-
-
 async function sletBruger(id) {
     // 1. Sikkerheds-tjek
     if (!confirm("Er du sikker på, at du vil slette denne bruger?")) return;

@@ -18,3 +18,4 @@ async function sendMessage(chatId) {
 
     textarea.value = '';
 }
+
