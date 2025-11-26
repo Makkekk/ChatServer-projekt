@@ -34,7 +34,3 @@ app.use("/api/chats", chatAPI); // Chat API routes
 // START SERVER
 app.listen(8080, () => console.log("Server running on http://localhost:8080"));
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 6f8a0e8 (levmeddet)
