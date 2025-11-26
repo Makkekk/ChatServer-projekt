@@ -1,5 +1,5 @@
 import express from "express";
-import fs from "fs";
+import { getUsers, saveUsers, getChats } from "../utils/db.js";
 
 const router = express.Router();
 
@@ -9,9 +9,9 @@ router.get("/", (req, res) => {
     return res.render("includes/landingPage");
   }
 
-  const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
+  const chats = getChats();
   const userChats = chats.filter(chat => chat.ejer === req.session.user.username);
-  const users = JSON.parse(fs.readFileSync("./JsonModeller/users.json"));
+  const users = getUsers();
 
   res.render("includes/listeSide", {
     username: req.session.user.username,
@@ -28,7 +28,7 @@ router.get("/loginForm", (req, res) =>
 // POST /loginForm
 router.post("/loginForm", (req, res) => {
   const { brugernavn, adgangskode } = req.body;
-  const users = JSON.parse(fs.readFileSync("./JsonModeller/users.json"));
+  const users = getUsers();
 
   const user = users.find(
     u => u.username === brugernavn && u.password === adgangskode
@@ -54,7 +54,7 @@ router.get("/createAccount", (req, res) => {
 router.post("/createAccount", (req, res) => {
   const { brugernavn, adgangskode } = req.body;
 
-  const users = JSON.parse(fs.readFileSync("./JsonModeller/users.json"));
+  const users = getUsers();
 
   if (users.find(u => u.username === brugernavn))
     return res.status(409).send("Brugernavn allerede taget");
@@ -68,11 +68,9 @@ router.post("/createAccount", (req, res) => {
   };
 
   users.push(newUser);
-  fs.writeFileSync("./JsonModeller/users.json", JSON.stringify(users));
+  saveUsers(users);
   res.redirect("/loginForm");
 });
-
-
 
 // DELETE /users/:id
 router.delete("/users/:id", (req, res) => {
@@ -82,7 +80,7 @@ router.delete("/users/:id", (req, res) => {
     }
 
     // 2. Læs bruger-filen
-    const users = JSON.parse(fs.readFileSync("./JsonModeller/users.json"));
+    const users = getUsers();
 
     // 3. Find og slet brugeren
     const userId = req.params.id;
@@ -105,11 +103,10 @@ router.delete("/users/:id", (req, res) => {
         return res.status(400).json({ error: "Du kan ikke slette dig selv" });
     }
 
-
     users.splice(userIndex, 1);
 
     // 4. Gem ændringerne
-    fs.writeFileSync("./JsonModeller/users.json", JSON.stringify(users));
+    saveUsers(users);
 
     // 5. Send succes-svar
     res.json({ success: true, message: "Bruger slettet" });

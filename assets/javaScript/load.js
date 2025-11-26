@@ -13,7 +13,7 @@ async function loadChats() {
 }
 
 async function loadusers(chatId) {
-    const res = await fetch("/listeside")
+    const res = await fetch("/api/users")
     const users = await res.json();
 
     const container = document.querySelector("#userList")

@@ -1,13 +1,14 @@
 import express from "express";
-import fs from "fs";
+import { getChats, saveChats, getMessages, saveMessages } from "../utils/db.js";
 
 const router = express.Router();
 
-// GET /chat/create → page
-router.get("/listeSide", (req, res) => {
+// GET /chat/ -> List of chats (RESTful: Collection resource)
+// Previously /chat/listeSide
+router.get("/", (req, res) => {
   if (!req.session.user) return res.redirect("/loginForm");
 
-  const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
+  const chats = getChats();
   const userChats = chats.filter(chat => chat.ejer === req.session.user.username);
 
   res.render("includes/listeSide", {
@@ -18,9 +19,9 @@ router.get("/listeSide", (req, res) => {
   });
 });
 
-// POST /create chat
+// POST /chat -> Create chat
 router.post("/", (req, res) => {
-  const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
+  const chats = getChats();
 
   const newChat = {
     id: Date.now().toString(),
@@ -31,18 +32,23 @@ router.post("/", (req, res) => {
   };
 
   chats.push(newChat);
-  fs.writeFileSync("./JsonModeller/chats.json", JSON.stringify(chats));
-  res.redirect("/chat/listeSide");
+  saveChats(chats);
+  res.redirect("/chat"); // Redirect to the list (now at /chat)
 });
 
 // GET /chat/:chatId 
 router.get("/:chatId", (req, res) => {
   if (!req.session.user) return res.redirect("/loginForm");
 
-  const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
+  const chats = getChats();
   const chat = chats.find(c => c.id === req.params.chatId);
 
-  const messages = JSON.parse(fs.readFileSync("./JsonModeller/messages.json"));
+  if (!chat) return res.redirect("/chat");
+
+  const messages = getMessages();
+  // Ensure we match the chatId correctly. Note: messageRoutes.js now uses 'chatId' 
+  // but old data might use 'chat' or 'chatId'. 
+  // Based on previous file content, it was filtered by 'm.chatId'.
   const chatMessages = messages.filter(m => m.chatId === req.params.chatId);
 
   res.render("includes/chat", {
@@ -57,18 +63,18 @@ router.get("/:chatId", (req, res) => {
 
 // DELETE /chat/:chatId (REST DELETE)
 router.delete("/:chatId", (req, res) => {
-  const chats = JSON.parse(fs.readFileSync("./JsonModeller/chats.json"));
+  const chats = getChats();
   const chatIndex = chats.findIndex(c => c.id === req.params.chatId);
 
   if (chatIndex === -1)
     return res.status(404).json({ error: "Chat ikke fundet" });
 
   chats.splice(chatIndex, 1);
-  fs.writeFileSync("./JsonModeller/chats.json", JSON.stringify(chats));
+  saveChats(chats);
 
-  const messages = JSON.parse(fs.readFileSync("./JsonModeller/messages.json"));
+  const messages = getMessages();
   const updatedMessages = messages.filter(m => m.chatId !== req.params.chatId);
-  fs.writeFileSync("./JsonModeller/messages.json", JSON.stringify(updatedMessages));
+  saveMessages(updatedMessages);
 
   res.json({ success: true });
 });
