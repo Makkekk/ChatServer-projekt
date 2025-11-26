@@ -2,8 +2,9 @@ import express from "express";
 import fs from "fs";
 const router = express.Router();
 
-
-const chatsData = JSON.parse(fs.readFileSync());
+// import JSON-objekter
+const chatsJson = fs.readFileSync('./JsonModeller/chats.json');
+const chatsListe = JSON.parse(chatsJson);
 
 // get chats
 router.get("/chats", (req, res) => {
@@ -33,20 +34,15 @@ router.get("/chat/messages/:id", (req, res) => {
 })
 
 router.get("/chat/:id/messages", (req, res) => {
-    const messages = fs.readFileSync("./JsonModeller/messages.json");
-    const messagesData = JSON.parse(messages);
-
-     const newMessage = {
-    id: Date.now().toString(),
-    chatId: req.params.id,
-    sender: req.session.user.username,
-    text: req.body.messageText,
-    date: new Date().toLocaleString()
-  };
-  
-  messagesData.push(newMessage);
-  fs.writeFileSync("./JsonModeller/messages.json", JSON.stringify(messagesData));
-  res.json(newMessage);
+const id = req.params.id;
+const chat = chatsListe.find(chat=>{
+    return chat.id === id;
+}) 
+if (!chat){
+    res.status(404).send('Chatten blev ikke fundet');
+} else {
+    res.json(chat.messages)
+}
 });
 
 // delete /chat/:id
