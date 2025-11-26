@@ -2,6 +2,7 @@ import express from "express";
 import { getUsers, getMessages } from "../utils/db.js";
 const router = express.Router();
 
+//Handles admin deleting users of listing users
 
 // GET /users
 router.get("/users", (req, res) => {

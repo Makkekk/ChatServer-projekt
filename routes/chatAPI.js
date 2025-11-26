@@ -8,12 +8,13 @@ const chatsListe = JSON.parse(chatsJson);
 
 // get chats
 router.get("/chats", (req, res) => {
-
-    res.json(chatsListe);
+    const chats = fs.readFileSync("./JsonModeller/chats.json");
+    const chatsData = JSON.parse(chats);
+    res.json(chatsData);
 });
 
 //get /chat/:id
-router.get("/chats/:id", (req, res) => {
+router.get("/chat/:id", (req, res) => {
     const chatId = req.params.id;
     const chats = fs.readFileSync("./JsonModeller/chats.json");
     const chatsData = JSON.parse(chats);
@@ -24,7 +25,7 @@ router.get("/chats/:id", (req, res) => {
     res.json(chat);
 })
 
-router.get("/chats/messages/:id", (req, res) => {
+router.get("/chat/messages/:id", (req, res) => {
     const chatId = req.params.id;
     const messages = fs.readFileSync("./JsonModeller/messages.json");
     const messagesData = JSON.parse(messages);  
@@ -32,7 +33,7 @@ router.get("/chats/messages/:id", (req, res) => {
     res.json(chatMessages)
 })
 
-router.get("/chats/:id/messages", (req, res) => {
+router.get("/chat/:id/messages", (req, res) => {
 const id = req.params.id;
 const chat = chatsListe.find(chat=>{
     return chat.id === id;
@@ -45,7 +46,7 @@ if (!chat){
 });
 
 // delete /chat/:id
-router.delete("/chats/:id", (req, res) => {
+router.delete("/chat/:id", (req, res) => {
     const chat = fs.readFileSync("./JsonModeller/chats.json");
     const chatData = JSON.parse(chat);
 
