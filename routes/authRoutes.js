@@ -3,105 +3,37 @@ import { getUsers, saveUsers } from "../utils/db.js";
 
 const router = express.Router();
 
-// GET homepage
-router.get("/", (req, res) => {
-  if (!req.session.user) {
-    return res.render("includes/landingPage");
-  }
-  
-  // If user is logged in, redirect to the chat list
-  res.redirect("/chat");
-});
-
-// GET /loginForm
-router.get("/loginForm", (req, res) => 
-    res.render("includes/loginForm"));
-
-// POST /loginForm
 router.post("/loginForm", (req, res) => {
-  const { brugernavn, adgangskode } = req.body;
-  const users = getUsers();
-
-  const user = users.find(
-    u => u.username === brugernavn && u.password === adgangskode
-  );
-
-  if (!user) return res.status(401).send("Forkert login");
-
-  req.session.user = user;
-  res.redirect("/");
-});
-
-// GET /logout
-router.get("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("/"));
-});
-
-// GET /createAccount 
-router.get("/createAccount", (req, res) => {
-  res.render("includes/createAccount");
-});
-
-// POST /createAccount
-router.post("/createAccount", (req, res) => {
-  const { brugernavn, adgangskode } = req.body;
-
-  const users = getUsers();
-
-  if (users.find(u => u.username === brugernavn))
-    return res.status(409).send("Brugernavn allerede taget");
-
-  const newUser = {
-    id: Date.now().toString(),
-    username: brugernavn,
-    password: adgangskode,
-    niveau: 1,
-    dato: new Date()
-  };
-
-  users.push(newUser);
-  saveUsers(users);
-  res.redirect("/loginForm");
-});
-
-// DELETE /users/:id
-router.delete("/users/:id", (req, res) => {
-    // 1. Tjek om brugeren er logget ind og er admin
-    if (!req.session.user || req.session.user.niveau !== 3) {
-        return res.status(403).json({ error: "Adgang nægtet" });
-    }
-
-    // 2. Læs bruger-filen
+    const { brugernavn, adgangskode } = req.body;
     const users = getUsers();
+    const user = users.find(u => u.username === brugernavn && u.password === adgangskode);
 
-    // 3. Find og slet brugeren
-    const userId = req.params.id;
-    const userIndex = users.findIndex(u => u.id === userId);
-
-    if (userIndex === -1) {
-        return res.status(404).json({ error: "Bruger ikke fundet" });
-    }
-
-    // Ekstra sikkerhed: Slet ikke den sidste admin-bruger
-    if (users[userIndex].niveau === 3) {
-        const adminCount = users.filter(u => u.niveau === 3).length;
-        if (adminCount <= 1) {
-            return res.status(400).json({ error: "Kan ikke slette den sidste admin" });
-        }
-    }
+    if (!user) return res.status(401).send("Wrong login");
     
-    // Tjek om admin prøver at slette sig selv
-    if (users[userIndex].id === req.session.user.id) {
-        return res.status(400).json({ error: "Du kan ikke slette dig selv" });
-    }
+    req.session.user = user;
+    res.redirect("/");
+});
 
-    users.splice(userIndex, 1);
+router.post("/createAccount", (req, res) => {
+    const { brugernavn, adgangskode } = req.body;
+    const users = getUsers();
+    
+    if (users.find(u => u.username === brugernavn)) return res.status(409).send("User exists");
 
-    // 4. Gem ændringerne
+    const newUser = {
+        id: Date.now().toString(),
+        username: brugernavn,
+        password: adgangskode,
+        niveau: 1, 
+        dato: new Date()
+    };
+    users.push(newUser);
     saveUsers(users);
+    res.redirect("/loginForm");
+});
 
-    // 5. Send succes-svar
-    res.json({ success: true, message: "Bruger slettet" });
+router.get("/logout", (req, res) => {
+    req.session.destroy(() => res.redirect("/"));
 });
 
 export default router;

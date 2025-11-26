@@ -1,40 +1,32 @@
 import express from "express";
 import session from "express-session";
 
+// We only need these three route files
 import authRoutes from "./routes/authRoutes.js";
-import chatRoutes from "./routes/chatRoutes.js";
-import messageRoutes from "./routes/messageRoutes.js";
-import userAPI from "./routes/userAPI.js"; // Import userAPI
-import chatAPI from "./routes/chatAPI.js"; // Import chatAPI
+import viewRoutes from "./routes/viewRoutes.js";
+import apiRoutes from "./routes/apiRoutes.js"; 
 
 const app = express();
 
 app.set("view engine", "pug");
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/assets", express.static("assets"));
 
-app.use(
-  session({
+
+app.use(session({
     secret: "hemligkode",
     resave: false,
     saveUninitialized: true
-  })
-);
+}));
 
-app.use("/assets", express.static("./assets"));
+// 1. Auth (Login/Logout)
+app.use("/", authRoutes);
 
-// --- ROUTES ---
-app.use("/", authRoutes);      // login, logout, create user, homepage
-app.use("/chat", chatRoutes);  // chat CRUD
-app.use("/chat", messageRoutes); // messages inside chats
-app.use("/api", userAPI); // User API routes
-app.use("/api/chats", chatAPI); // Chat API routes
+// 2. Views (The HTML Pages - The Client)
+app.use("/", viewRoutes);
 
-// START SERVER
+// 3. API (The Data - JSON)
+app.use("/", apiRoutes);
+
 app.listen(8080, () => console.log("Server running on http://localhost:8080"));
-
-<<<<<<< HEAD
-
-=======
->>>>>>> 6f8a0e8 (levmeddet)

@@ -3,24 +3,23 @@ include header.pug
 h1 Velkommen, #{username}
 
 h2 Dine chats
+// We leave this empty because load.js fills it
 ul#chatList
-  if chats && chats.length > 0
-    each chat in chats
-        li
-            a(href=`/chat/${chat.id}`) #{chat.name}
-  else
-    li Ingen chats endnu. 
+  li Indlæser chats...
 
 if niveau === 3
   hr
   h2 Administer brugere
   ul#userList
-    li Henter brugere...
+    li Indlæser brugere...
 
 h2 Opret ny chat
-form(method='POST', action='/chat')
+
+form(id="createChatForm")
   input(type='text', name='chatName', placeholder='Indtast chatnavn', required)
   button(type='submit') Opret chat
 
 script(src='/assets/javaScript/deleteScript.js')
+
 script(src='/assets/javaScript/load.js')
+script(src='/assets/javaScript/Create.js')
