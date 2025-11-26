@@ -1,3 +1,10 @@
+document.addEventListener("DOMContentLoaded", () => {
+    loadChats();
+    if (userNiveau !== undefined && userNiveau === 3) {
+        loadusers();
+    }
+})
+
 // --- LOAD CHATS (til listesiden) ---
 async function loadChats() {
     const container = document.querySelector("#chatList");
@@ -31,7 +38,7 @@ async function loadChats() {
 
                 li.appendChild(a);
 
-                if (currentUser && (currentUser.niveau === 3 || (currentUser.niveau === 2 && chat.ejer === currentUser.username))) {
+                if (currentUser && (userNiveau === 3 || (userNiveau === 2 && chat.ejer === currentUser))) {
                     const deleteBtn = document.createElement("button");
                     deleteBtn.type = "button";
                     deleteBtn.textContent = "Slet";
@@ -79,7 +86,7 @@ async function loadusers() {
             btn.type = "button";
             btn.textContent = "Slet";
             // Assign function reference directly
-            btn.onclick = function () { sletBruger(user.id); };
+            btn.onclick = function () { deleteUser(user.id); };
 
             li.appendChild(span);
             li.appendChild(btn);
@@ -140,7 +147,3 @@ async function loadMessages(chatId) {
         console.error("Fejl ved indlæsning af beskeder:", err);
     }
 }
-
-
-document.addEventListener("DOMContentLoaded", loadChats);
-document.addEventListener("DOMContentLoaded", loadusers);

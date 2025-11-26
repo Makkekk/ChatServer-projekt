@@ -69,7 +69,7 @@ router.delete("/chats/:id", (req, res) => {
         saveChats(chats);
         
         // Clean up messages
-        const allMessages = getMessages();
+        const allMessages = getChats().flatMap(c => c.messages);
         const remainingMessages = allMessages.filter(m => m.chatId !== req.params.id);
         saveMessages(remainingMessages);
         

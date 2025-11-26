@@ -32,6 +32,13 @@
         "sender": "karsten",
         "text": "hej",
         "date": "26.11.2025, 15.19.50"
+      },
+      {
+        "id": "1764170393735",
+        "chatId": "1763893433733",
+        "sender": "admin",
+        "text": "132",
+        "date": "26.11.2025, 16.19.53"
       }
     ]
   },
@@ -162,17 +169,5 @@
     "name": "hej",
     "ejer": "karsten",
     "oprettelsesDato": "2025-11-26T14:21:56.859Z"
-  },
-  {
-    "id": "1764166916860",
-    "name": "hej",
-    "ejer": "karsten",
-    "oprettelsesDato": "2025-11-26T14:21:56.860Z"
-  },
-  {
-    "id": "1764167775308",
-    "name": "test",
-    "ejer": "admin",
-    "oprettelsesDato": "2025-11-26T14:36:15.308Z"
   }
 ]
