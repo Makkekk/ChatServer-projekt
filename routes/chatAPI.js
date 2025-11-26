@@ -8,9 +8,8 @@ const chatsListe = JSON.parse(chatsJson);
 
 // get chats
 router.get("/chats", (req, res) => {
-    const chats = fs.readFileSync("./JsonModeller/chats.json");
-    const chatsData = JSON.parse(chats);
-    res.json(chatsData);
+
+    res.json(chatsListe);
 });
 
 //get /chat/:id

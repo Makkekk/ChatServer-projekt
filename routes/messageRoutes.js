@@ -1,24 +1,26 @@
 import express from "express";
-import fs from "fs";
+import { getMessages, saveMessages } from "../utils/db.js";
 
 const router = express.Router();
 
 // POST send besked
-router.post("/message", (req, res) => {
-  const { chatId, messageText } = req.body;
+router.post("/chats/message", (req, res) => {
+  const chatId = req.body.chatId;
+  const messageText = req.body.messageText;
 
-  const messages = JSON.parse(fs.readFileSync("./JsonModeller/messages.json"));
+  // Load existing messages
+  const messages = getMessages();
 
   const newMessage = {
     id: Date.now().toString(),
-    chatId,
+    chatId: chatId, // Changed 'chat' to 'chatId' to be consistent with how you filter it elsewhere (e.g. in chatRoutes)
     sender: req.session.user.username,
     text: messageText,
     date: new Date().toLocaleString()
   };
 
   messages.push(newMessage);
-  fs.writeFileSync("./JsonModeller/messages.json", JSON.stringify(messages));
+  saveMessages(messages);
 
   res.json(newMessage);
 });
