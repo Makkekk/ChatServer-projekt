@@ -3,8 +3,9 @@ html(lang="da")
   head
     meta(charset="UTF-8")
     title= title
+    link(rel="stylesheet", href="/assets/css/Opret_Bruger_side.css")
   body
-    nav
-        a(href="/") Forside
-        if username 
-            span  | Logget ind som: #{username}
+
+    if username
+      p Du er logget ind som #{username} (Niveau: #{niveau})
+      a(href="/logout") Log ud

@@ -1,14 +1,15 @@
-h1 Log ind på din konto
+include header.pug
 
-form(action="/login" method="post")
-    label(for="brugernavn") Brugernavn:
-    input(type="text" id="brugernavn" name="brugernavn")
-
-    label(for="adgangskode") Adgangskode:
-    input(type="password" id="adgangskode" name="adgangskode")
-    button(type="submit") Log ind
-
-p Hvis du ikke har en konto, kan du
-    a(href="/createAccount")
-        button(type="button") Tilmeld dig
-
+div(id='main-container')
+    h1 Log ind på din konto
+    form(action="/loginForm" method="post")
+        label(for="brugernavn") Brugernavn:
+        input(type="text" id="brugernavn" name="brugernavn")
+    
+        label(for="adgangskode") Adgangskode:
+        input(type="password" id="adgangskode" name="adgangskode")
+        button(type="submit") Log ind
+    
+    p Hvis du ikke har en konto, kan du
+        a(href="/createAccount")
+            button(type="button") Tilmeld dig

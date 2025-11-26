@@ -1,13 +1,14 @@
 include header.pug
 
-h1 Opret dig som bruger
-     
-form(action='/opret-bruger', method='POST')
+div(id='main-container')
+
+  h1 Opret dig som bruger
+
+  form(action='/opret-bruger', method='POST')
     label(for="brugernavn") Brugernavn:
-    input(type='text', name='brugernavn') 
-     
+    input(type='text', name='brugernavn', required)
+    br
     label(for="adgangskode") Adgangskode:
-    input(type='password', name='adgangskode') 
-
+    input(type='password', name='adgangskode', required)
+    br
     button(type='submit') Opret bruger
-
