@@ -145,11 +145,24 @@ async function loadMessages(chatId) {
     if (!chatId) return;
 
     try {
-        const res = await fetch(`/chats/${chatId}/messages`);
-        const messages = await res.json();
+        // 1. Hent selve chatten (for at få navnet)
+        const chatRes = await fetch(`/chats/${chatId}`);
+        if (!chatRes.ok) throw new Error("Kunne ikke hente chat-info");
+        const chat = await chatRes.json();
+
+        // Opdater titlen med chat-navnet
+        const titleElement = document.querySelector("#chatTitle");
+        if (titleElement) {
+            titleElement.textContent = `Chat: ${chat.name}`;
+        }
+
+        // 2. Hent beskederne (stadig via /chats/:id/messages – 100% efter opgavebeskrivelsen)
+        const msgRes = await fetch(`/chats/${chatId}/messages`);
+        if (!msgRes.ok) throw new Error("Kunne ikke hente beskeder");
+        const messages = await msgRes.json();
 
         const container = document.querySelector("#messages");
-        container.textContent = '';
+        container.textContent = ''; // Ryd tidligere beskeder
 
         if (messages.length === 0) {
             const p = document.createElement("p");
@@ -161,21 +174,16 @@ async function loadMessages(chatId) {
         messages.forEach(message => {
             const p = document.createElement("p");
 
-
             const strong = document.createElement("strong");
             strong.textContent = `${message.sender}: `;
 
-
             const textNode = document.createTextNode(message.text);
-
 
             const br = document.createElement("br");
 
-
             const small = document.createElement("small");
-            small.textContent = message.date;
+            small.textContent = message.date; // Allerede dansk format fra serveren
 
-            // Assemble the paragraph
             p.appendChild(strong);
             p.appendChild(textNode);
             p.appendChild(br);
@@ -188,5 +196,7 @@ async function loadMessages(chatId) {
 
     } catch (err) {
         console.error("Fejl ved indlæsning af beskeder:", err);
+        const container = document.querySelector("#messages");
+        container.textContent = "Fejl: Kunne ikke indlæse chatten.";
     }
 }

@@ -14,13 +14,13 @@ router.get("/", (req, res) => {
     });
 });
 
-// GET /chats/:id (hvis den chat der er bundet op mod ID'et)
 router.get("/chat/:id", (req, res) => {
     if (!req.session.user) return res.redirect("/loginForm");
     
     res.render("includes/chat", {
         chatId: req.params.id,
-        username: req.session.user.username
+        username: req.session.user.username,
+        niveau: req.session.user.niveau
     });
 });
 

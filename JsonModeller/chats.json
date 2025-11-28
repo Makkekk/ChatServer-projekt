@@ -104,7 +104,15 @@
     "name": "test123",
     "ejer": "admin",
     "oprettelsesDato": "2025-11-26T09:18:36.308Z",
-    "messages": []
+    "messages": [
+      {
+        "id": "1764325671127",
+        "chatId": "1764148716308",
+        "sender": "admin",
+        "text": "heh",
+        "date": "11/28/2025, 11:27:51 AM"
+      }
+    ]
   },
   {
     "id": "1764150231706",
@@ -140,5 +148,11 @@
     "ejer": "admin",
     "oprettelsesDato": "2025-11-26T10:20:22.999Z",
     "messages": []
+  },
+  {
+    "id": "1764326272121",
+    "name": "nyChat",
+    "ejer": "admin",
+    "oprettelsesDato": "2025-11-28T10:37:52.121Z"
   }
 ]
