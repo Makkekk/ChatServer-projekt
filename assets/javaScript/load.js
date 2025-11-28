@@ -40,9 +40,8 @@ async function loadChats() {
                 // 
                 const a = document.createElement("a")
 
-                a.href = `/chat/${chat.id}`
+                a.href = `/chats/${chat.id}`;
                 a.textContent = chat.name // Safe against XSS
-
                 li.appendChild(a);
 
                 if (currentUser && (userNiveau === 3 || (userNiveau === 2 && chat.ejer === currentUser))) {
@@ -79,9 +78,33 @@ async function loadChats() {
 
 
 // ---------------   editChats-------------------------------------
-
-
 async function editChat(chatId) {
+    const nytNavn = prompt("Indtast nyt navn på chatten:", "");
+    if (!nytNavn || nytNavn.trim() === "") return;
+
+    try {
+        const res = await fetch(`/chats/${chatId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({name: nytNavn.trim() })
+        });
+
+        if (res.ok) {
+            const li = document.getElementById(`chat-${chatId}`);
+            const a = li.querySelector("a");
+            a.textContent = nytNavn.trim();
+            alert("Chat navn opdateret!");
+        } else {
+            const data = await res.json();
+            alert("Fejl: " + (data.error || "Kunne ikke opdatere"));
+        }
+    } catch (err) {
+        console.error("Fejl ved redigering:", err);
+        alert("Netværksfejl");
+    }
+}
+
+/*async function editChat(chatId) {
     const nytNavn = prompt("Indtast det nye navn på chatten");
 
     if(!nytNavn){
@@ -104,7 +127,7 @@ async function editChat(chatId) {
             console.error("Fejl ved opdaterin", err);
             alert("Der opstod en netværksfejl.");
         }
-    }
+    }*/
 
 // --- LOAD USERS (For Admin) ---
 async function loadusers() {
@@ -149,47 +172,27 @@ async function loadMessages(chatId) {
 
     try {
         const res = await fetch(`/chats/${chatId}/messages`);
+        if (!res.ok) throw new Error("Kunne ikke hente beskeder");
         const messages = await res.json();
 
         const container = document.querySelector("#messages");
         container.textContent = '';
 
         if (messages.length === 0) {
-            const p = document.createElement("p");
-            p.textContent = "Ingen beskeder endnu.";
-            container.appendChild(p);
+            container.innerHTML = "<p>Ingen beskeder endnu.</p>";
             return;
         }
 
-        messages.forEach(message => {
+        messages.forEach(msg => {
             const p = document.createElement("p");
-
-
-            const strong = document.createElement("strong");
-            strong.textContent = `${message.sender}: `;
-
-
-            const textNode = document.createTextNode(message.text);
-
-
-            const br = document.createElement("br");
-
-
-            const small = document.createElement("small");
-            small.textContent = message.date;
-
-            // Assemble the paragraph
-            p.appendChild(strong);
-            p.appendChild(textNode);
-            p.appendChild(br);
-            p.appendChild(small);
-
+            p.innerHTML = `<strong>${msg.sender}:</strong> ${msg.text}<br><small>${msg.date}</small>`;
             container.appendChild(p);
         });
 
 
     } catch (err) {
         console.error("Fejl ved indlæsning af beskeder:", err);
+        document.querySelector("#messages").textContent = "Fejl: Kunne ikke indlæse beskeder.";
     }
 }
 

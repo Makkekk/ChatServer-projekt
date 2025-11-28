@@ -14,13 +14,25 @@ router.get("/", (req, res) => {
     });
 });
 
-// GET /chats/:id (hvis den chat der er bundet op mod ID'et)
-router.get("/chat/:id", (req, res) => {
+// NY efter opgavebeskrivelsen
+router.get("/chats/:id", async (req, res) => {
     if (!req.session.user) return res.redirect("/loginForm");
-    
+
+    const chatId = req.params.id;
+
+    // Hent chatten for at vise navnet med det samme (valgfrit, men pænt)
+    const chats = getChats();
+    const chat = chats.find(c => c.id === chatId);
+
+    if (!chat) {
+        return res.status(404).render("includes/error", { message: "Chat ikke fundet" });
+    }
+
     res.render("includes/chat", {
-        chatId: req.params.id,
-        username: req.session.user.username
+        chatId: chatId,
+        chatName: chat.name, // Send navn med direkte
+        username: req.session.user.username,
+        niveau: req.session.user.niveau
     });
 });
 
@@ -28,7 +40,7 @@ router.get("/chat/:id", (req, res) => {
 
 // ----------- jamals rediger-chats-navn-knaps funktionalitet -----------------------
 
-router.put('/chats/:id', (req, res)=>{
+/*router.put('/chats/:id', (req, res)=>{
     const user = req.session.user;
     if (!user){
         return res.sendStatus(401);
@@ -53,7 +65,7 @@ router.put('/chats/:id', (req, res)=>{
     } else {
         req.SendStatus(403);
     }
-})
+})*/
 
 router.get("/loginForm", (req, res) => 
     res.render("includes/loginForm"));

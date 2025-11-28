@@ -1,6 +1,6 @@
 include header.pug
 
-h1 Chat: #{chatName}
+h1#chatTitle Chat: #{chatName || 'Indlæser...'}
 p
   a(href='/') ← Tilbage til chats
 

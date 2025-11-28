@@ -105,5 +105,109 @@
     "name": "test",
     "ejer": "admin",
     "messages": []
+  },
+  {
+    "id": "1764326272121",
+    "name": "hej chat",
+    "ejer": "admin",
+    "oprettelsesDato": "2025-11-28T10:37:52.121Z",
+    "messages": []
+  },
+  {
+    "id": "1764330373851",
+    "name": "Hej Hej",
+    "dato": "28.11.2025, 12.46.13",
+    "ejer": "admin",
+    "messages": [
+      {
+        "id": "1764330378657",
+        "chatId": "1764330373851",
+        "sender": "admin",
+        "text": "hej du",
+        "date": "11/28/2025, 12:46:18 PM"
+      }
+    ]
+  },
+  {
+    "id": "1764330450410",
+    "name": "hej du",
+    "dato": "28.11.2025, 12.47.30",
+    "ejer": "admin",
+    "messages": [
+      {
+        "id": "1764330455944",
+        "chatId": "1764330450410",
+        "sender": "admin",
+        "text": "hej du",
+        "date": "11/28/2025, 12:47:35 PM"
+      }
+    ]
+  },
+  {
+    "id": "1764330686365",
+    "name": "Test12342",
+    "dato": "28.11.2025, 12.51.26",
+    "ejer": "admin",
+    "messages": [
+      {
+        "id": "1764330691192",
+        "chatId": "1764330686365",
+        "sender": "admin",
+        "text": "hej",
+        "dato": "28.11.2025, 12.51.31"
+      }
+    ]
+  },
+  {
+    "id": "1764332868158",
+    "name": "checktest",
+    "dato": "28.11.2025, 13.27.48",
+    "ejer": "admin",
+    "messages": [
+      {
+        "id": "1764332935454",
+        "chatId": "1764332868158",
+        "sender": "admin",
+        "text": "datacheck",
+        "dato": "28.11.2025, 13.28.55"
+      }
+    ]
+  },
+  {
+    "id": "1764333179439",
+    "name": "nychecktest",
+    "date": "28.11.2025, 13.32.59",
+    "ejer": "admin",
+    "messages": [
+      {
+        "id": "1764333182450",
+        "chatId": "1764333179439",
+        "sender": "admin",
+        "text": "hej",
+        "date": "28.11.2025, 13.33.02"
+      }
+    ]
+  },
+  {
+    "id": "1764333213431",
+    "name": "check123",
+    "date": "28.11.2025, 13.33.33",
+    "ejer": "admin",
+    "messages": [
+      {
+        "id": "1764333216448",
+        "chatId": "1764333213431",
+        "sender": "admin",
+        "text": "hej",
+        "date": "28.11.2025, 13.33.36"
+      },
+      {
+        "id": "1764333670056",
+        "chatId": "1764333213431",
+        "sender": "admin",
+        "text": "hej ihen",
+        "date": "28.11.2025, 13.41.10"
+      }
+    ]
   }
 ]
