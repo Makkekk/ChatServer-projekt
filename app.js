@@ -1,7 +1,7 @@
 import express from "express";
 import session from "express-session";
 
-// We only need these three route files
+
 import authRoutes from "./routes/authRoutes.js";
 import viewRoutes from "./routes/viewRoutes.js";
 import apiRoutes from "./routes/apiRoutes.js"; 
@@ -20,10 +20,11 @@ app.use(session({
     saveUninitialized: true
 }));
 
+//mounting af ruter
 // 1. Auth (Login/Logout)
 app.use("/", authRoutes);
 
-// 2. Views (The HTML Pages - The Client)
+// 2. Views (The HTML Pages - The Client) //skal nok ændres til dom manipulation senere
 app.use("/", viewRoutes);
 
 // 3. API (The Data - JSON)
