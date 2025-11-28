@@ -24,6 +24,8 @@ router.get("/chat/:id", (req, res) => {
     });
 });
 
+
+
 // ----------- jamals rediger-chats-navn-knaps funktionalitet -----------------------
 
 router.put('/chats/:id', (req, res)=>{

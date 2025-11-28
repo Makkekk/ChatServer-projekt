@@ -38,16 +38,7 @@ router.get("/chats/:id/messages", (req, res) => {
     res.json(chat.messages);
 });
 
-router.get("/chats/messages/:id", (req, res)=>{
-    const messageId = req.params.id;
-    const chats = getChats();
-    //find den chat som beskeden tilhører
-    const chat = chats.find(chat => chat.id === messageId);
 
-    //find den faktiske besked
-    const message = chat.messages.find(message => message.id === messageId);
-    res.json(message);
-});
 
 // DELETE /chats/:id (slet chat for brugere med niveau 2 og 3)) 
 router.delete("/chats/:id", (req, res) => {
@@ -73,20 +64,22 @@ router.delete("/chats/:id", (req, res) => {
     }
 });
 
-// POST /chats (Opret chat)
-router.post("/chats", (req, res) => {
-    const chats = getChats();
-    const newChat = {
-        id: Date.now().toString(),
-        name: req.body.name, 
-        ejer: req.session.user.username,
-        oprettelsesDato: new Date(),
-    };
-    chats.push(newChat);
-    saveChats(chats);
-    res.json(newChat);
-});
+router.get("/chats/messages/:id", (req, res) => {
+    //hent chats, eller send et tomt array hvis ingen findes
+    const chats = getChats() || [];
+    const messageId = req.params.id;
 
+    // søg efter beskeden i alle chats
+    for (const chat of chats) {
+       
+        const msg = chat.messages.find(m => m.id === messageId);
+        
+        if (msg) return res.json(msg);
+    }
+
+    // 3. Not found
+    res.status(404).json({ error: "Message not found" });
+});
 
 // POST /chats/message (Send besekd)
 router.post("/chats/message", (req, res) => {
@@ -111,8 +104,9 @@ router.post("/chats/message", (req, res) => {
     
     if (!chat.messages) {
       chat.messages = []; 
-    }
+    } else {
     chat.messages.push(newMessage);
+    }
     saveChats(chats);
 
     res.json(newMessage);
