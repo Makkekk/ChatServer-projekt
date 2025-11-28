@@ -23,7 +23,8 @@ router.get("/chats", (req, res) => {
 router.get("/chats/:id", (req, res) => {
     const chats = getChats();
     const chat = chats.find(c => c.id === req.params.id);
-    if (!chat) return res.status(404).json({ error: "Not found" });
+    if (!chat) 
+        return res.status(404).json({ error: "Not found" });
     res.json(chat);
 });
 

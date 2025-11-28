@@ -15,6 +15,7 @@ router.get("/", (req, res) => {
 });
 
 // NY efter opgavebeskrivelsen
+
 router.get("/chats/:id", async (req, res) => {
     if (!req.session.user) return res.redirect("/loginForm");
 
@@ -35,6 +36,7 @@ router.get("/chats/:id", async (req, res) => {
         niveau: req.session.user.niveau
     });
 });
+
 
 
 
