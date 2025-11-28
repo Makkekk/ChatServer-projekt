@@ -20,7 +20,7 @@ background-position: center;
     border-radius: 8px;
 }
 
-form{
+#createChatForm{
     display: flex;
     flex-direction: column;
     gap: 15px;

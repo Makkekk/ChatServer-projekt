@@ -24,6 +24,8 @@ router.get("/chat/:id", (req, res) => {
     });
 });
 
+
+
 // ----------- jamals rediger-chats-navn-knaps funktionalitet -----------------------
 
 router.put('/chats/:id', (req, res)=>{
@@ -46,7 +48,6 @@ router.put('/chats/:id', (req, res)=>{
     if (isLevel3 || isOwner){
         chatToUpdate.name = nytNavn
         saveChats(chats);
-
 
         res.sendStatus(200);
     } else {

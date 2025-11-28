@@ -14,12 +14,12 @@ async function loadChats() {
     if (!container) return;
 
     try {
-        const res = await fetch("/chats"); 
+        const res = await fetch("/chats");
         if (!res.ok) throw new Error(`Error: ${res.status}`);
 
         const chats = await res.json();
 
-       
+
         container.textContent = '';
 
         if (chats.length === 0) {
@@ -56,7 +56,6 @@ async function loadChats() {
                     edit.onclick = function () {
                         editChat(chat.id);
                     }
-                    
 
                     li.appendChild(deleteBtn);
                     li.appendChild(edit);
@@ -199,4 +198,8 @@ async function loadMessages(chatId) {
         const container = document.querySelector("#messages");
         container.textContent = "Fejl: Kunne ikke indlæse chatten.";
     }
+}
+
+async function loadLoginForm() {
+
 }

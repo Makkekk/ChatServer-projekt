@@ -7,8 +7,7 @@ height: 100vh;
 background-color: cornsilk;
 /*background-image: url(../images/scumbag-javascript.jpeg);*/
 background-position: center;
-
-}   
+}
 
 #main-container{
     display: flex;
