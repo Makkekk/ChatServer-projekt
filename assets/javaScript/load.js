@@ -1,7 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadChats();
-    if (userNiveau !== undefined && userNiveau === 3) {
+    if (typeof userNiveau !== 'undefined' && userNiveau === 3) {
         loadusers();
+    }
+    if (typeof currentChatId !== 'undefined') {
+        loadMessages(currentChatId);
     }
 })
 

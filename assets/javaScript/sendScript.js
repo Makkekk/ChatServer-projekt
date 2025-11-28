@@ -33,5 +33,4 @@ async function sendMessage(chatId) {
         alert("Fejl: Kunne ikke sende besked");
     }
 }
-document.addEventListener("DOMContentLoaded", sendMessage);
 
