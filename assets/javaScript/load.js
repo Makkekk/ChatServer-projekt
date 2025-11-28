@@ -46,8 +46,17 @@ async function loadChats() {
                     deleteBtn.onclick = function () {
                         deleteChat(chat.id);
                     };
+                    const edit = document.createElement("button");
+                    edit.type = "button";
+                    edit.textContent = "Rediger";
+
+                    edit.onclick = function () {
+                        editChat(chat.id);
+                    }
+                    
 
                     li.appendChild(deleteBtn);
+                    li.appendChild(edit);
                 }
 
                 container.appendChild(li)
