@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (typeof currentChatId !== 'undefined') {
         loadMessages(currentChatId);
     }
+    //Opdatere beskeder automatisk hvert 2. sekund
+    setInterval(() => {
+        loadMessages(currentChatId);
+    }, 2000);
 })
 
 // --- LOAD CHATS (til listesiden) ---
@@ -183,7 +187,6 @@ async function loadMessages(chatId) {
             container.appendChild(p);
         });
 
-        container.scrollTop = container.scrollHeight;
 
     } catch (err) {
         console.error("Fejl ved indlæsning af beskeder:", err);
