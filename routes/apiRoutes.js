@@ -27,7 +27,20 @@ router.get("/chats/:id", (req, res) => {
     res.json(chat);
 });
 
-
+router.post("/chats", (req, res) => {
+    const name = req.body.name;
+    const ejer = req.session.user.username;
+    const chats = getChats();
+    const newChat = {
+        id: Date.now().toString(),
+        name: name,
+        ejer: ejer,
+        messages: []
+    };
+    chats.push(newChat);
+    saveChats(chats);
+    res.status(201).json(newChat);
+});
 
 // GET /chats/:id/messages (Beskeder i en chat)
 router.get("/chats/:id/messages", (req, res) => {
