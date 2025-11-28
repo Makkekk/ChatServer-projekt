@@ -69,6 +69,37 @@ async function loadChats() {
         container.appendChild(li);
     }
 }
+
+
+
+// ---------------   editChats-------------------------------------
+
+
+async function editChat(chatId) {
+    const nytNavn = prompt("Indtast det nye navn på chatten");
+
+    if(!nytNavn){
+        return;
+    }
+    try {
+        const res = await fetch (`/chats/${chatId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({navn: nytNavn})
+        });
+        if (res.ok){
+            loadChats();
+        } else {
+            alert("Du har ikke rettigheder til at redigere denne chat, eller er der sket en fejl");
+        }
+    }catch(err){
+            console.error("Fejl ved opdaterin", err);
+            alert("Der opstod en netværksfejl.");
+        }
+    }
+
 // --- LOAD USERS (For Admin) ---
 async function loadusers() {
     const container = document.querySelector("#userList");
