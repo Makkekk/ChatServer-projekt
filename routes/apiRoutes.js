@@ -27,6 +27,8 @@ router.get("/chats/:id", (req, res) => {
     res.json(chat);
 });
 
+
+
 // GET /chats/:id/messages (Beskeder i en chat)
 router.get("/chats/:id/messages", (req, res) => {
     const chats = getChats();
@@ -36,18 +38,15 @@ router.get("/chats/:id/messages", (req, res) => {
     res.json(chat.messages);
 });
 
-// POST /chats (Opret chat)
-router.post("/chats", (req, res) => {
+router.get("/chats/messages/:id", (req, res)=>{
+    const messageId = req.params.id;
     const chats = getChats();
-    const newChat = {
-        id: Date.now().toString(),
-        name: req.body.name, 
-        ejer: req.session.user.username,
-        oprettelsesDato: new Date(),
-    };
-    chats.push(newChat);
-    saveChats(chats);
-    res.json(newChat);
+    //find den chat som beskeden tilhører
+    const chat = chats.find(chat => chat.id === messageId);
+
+    //find den faktiske besked
+    const message = chat.messages.find(message => message.id === messageId);
+    res.json(message);
 });
 
 // DELETE /chats/:id (slet chat for brugere med niveau 2 og 3)) 
@@ -73,6 +72,21 @@ router.delete("/chats/:id", (req, res) => {
         res.status(403).json({ error: "Permission denied" });
     }
 });
+
+// POST /chats (Opret chat)
+router.post("/chats", (req, res) => {
+    const chats = getChats();
+    const newChat = {
+        id: Date.now().toString(),
+        name: req.body.name, 
+        ejer: req.session.user.username,
+        oprettelsesDato: new Date(),
+    };
+    chats.push(newChat);
+    saveChats(chats);
+    res.json(newChat);
+});
+
 
 // POST /chats/message (Send besekd)
 router.post("/chats/message", (req, res) => {
@@ -113,8 +127,51 @@ router.get("/users", (req, res) => {
     
     const users = getUsers();
     
-    const safeUsers = users.map(u => ({ id: u.id, username: u.username, niveau: u.niveau }));
-    res.json(safeUsers);
+    const mapUser = users.map(u => ({ id: u.id, username: u.username, niveau: u.niveau }));
+    res.json(mapUser);
+});
+
+router.get("/users/:id", (req,res)=>{
+    if (req.session.user.niveau !== 3) 
+        return res.status(403).json({ error: "Admin only" });
+
+    const users = getUsers();
+    const user = users.find(u => u.id === req.params.id);
+
+    if (!user) {
+        res.status(404).json({ error: "User not found" })
+        } else {
+    const userToSend = { id: user.id, username: user.username, niveau: user.niveau };
+    res.json(userToSend);
+    }
+});
+
+router.get("/users/:id/messages", (req,res)=>{
+    if (req.session.user.niveau !== 3) 
+        return res.status(403).json({ error: "Admin only" })
+
+    const users = getUsers()
+    const user = users.find(u => u.id === req.params.id)
+
+    if (!user) {   
+    res.status(404).json({ error: "User not found" })
+    }
+
+    const chat = getChats()
+    const userMessages = []
+
+    chat.forEach(chat => {
+        chat.messages.forEach(message => {
+            if (message.sender === user.username) {
+                userMessages.push(message)
+            }
+        })
+    });
+    if (userMessages.length > 0) {
+    res.json(userMessages)
+    } else {
+        res.status(404).json({ error: "No messages" })
+    }
 });
 
 // DELETE /users/:id (Admin delete user)
@@ -132,7 +189,5 @@ router.delete("/users/:id", (req, res) => {
     saveUsers(users);
     res.json({ success: true });
 });
-
-
 
 export default router;

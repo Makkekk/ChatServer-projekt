@@ -47,7 +47,6 @@ router.put('/chats/:id', (req, res)=>{
         chatToUpdate.name = nytNavn
         saveChats(chats);
 
-
         res.sendStatus(200);
     } else {
         req.SendStatus(403);
