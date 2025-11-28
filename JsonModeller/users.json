@@ -19,5 +19,12 @@
     "password": "test4",
     "niveau": 1,
     "dato": "2025-11-24T08:47:40.562Z"
+  },
+  {
+    "id": "1764329503377",
+    "username": "jens",
+    "password": "jens3",
+    "niveau": 1,
+    "dato": "2025-11-28T11:31:43.377Z"
   }
 ]

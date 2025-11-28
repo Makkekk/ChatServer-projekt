@@ -16,8 +16,10 @@ async function createChat() {
                 });
 
                 if (res.ok) {
-                    window.location.reload();
-                } else {
+                    const newChat = await res.json();
+                    window.location.href = `/chats/${newChat.id}`;  // NU: /chats/:id
+                }
+                else {
                     alert("Fejl: Kunne ikke oprette chat");
                 }
             } catch (err) {

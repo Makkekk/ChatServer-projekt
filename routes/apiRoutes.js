@@ -11,12 +11,30 @@ const checkAuth = (req, res, next) => {
 
 router.use(checkAuth);
 
-
 // GET /chats (Lise af alle chats)
 router.get("/chats", (req, res) => {
     const chats = getChats();
   
     res.json(chats);
+});
+
+// Manglende post til at lave chat
+router.post("/chats", (req, res) => {
+    const { name } = req.body;
+    if (!name || name.trim() === "") {
+        return res.status(400).json({ error: "Chatnavn er påkrævet" });
+    }
+    const chats = getChats();
+    const newChat = {
+        id: Date.now().toString(),
+        name: name.trim(),
+        date: new Date().toLocaleString('da-DK'),
+        ejer: req.session.user.username,
+        messages: []
+    };
+    chats.push(newChat);
+    saveChats(chats);
+    res.status(201).json(newChat);
 });
 
 // GET /chats/:id (Specifik chat)
@@ -27,8 +45,6 @@ router.get("/chats/:id", (req, res) => {
     res.json(chat);
 });
 
-
-
 // GET /chats/:id/messages (Beskeder i en chat)
 router.get("/chats/:id/messages", (req, res) => {
     const chats = getChats();
@@ -37,8 +53,6 @@ router.get("/chats/:id/messages", (req, res) => {
     //retuner arrayet inde i chats
     res.json(chat.messages);
 });
-
-
 
 // DELETE /chats/:id (slet chat for brugere med niveau 2 og 3)) 
 router.delete("/chats/:id", (req, res) => {
@@ -62,6 +76,38 @@ router.delete("/chats/:id", (req, res) => {
     } else {
         res.status(403).json({ error: "Permission denied" });
     }
+});
+
+// --- PUT /chats/:id – OPDATER CHAT-NAVN (kun ejer eller admin) ---
+router.put("/chats/:id", (req, res) => {
+    const chatId = req.params.id;
+    const { name: nytNavn } = req.body;
+
+    if (!nytNavn || nytNavn.trim() === "") {
+        return res.status(400).json({ error: "Chatnavn må ikke være tomt" });
+    }
+
+    const chats = getChats();
+    const chatIndex = chats.findIndex(c => c.id === chatId);
+
+    if (chatIndex === -1) {
+        return res.status(404).json({ error: "Chat ikke fundet" });
+    }
+
+    const chat = chats[chatIndex];
+    const user = req.session.user;
+
+    const erEjer = chat.ejer === user.username;
+    const erAdmin = user.niveau === 3;
+
+    if (!erAdmin && !erEjer) {
+        return res.status(403).json({ error: "Ingen tilladelse" });
+    }
+
+    chat.name = nytNavn.trim();
+    saveChats(chats);
+
+    res.json({ success: true, chat });
 });
 
 router.get("/chats/messages/:id", (req, res) => {
@@ -98,7 +144,7 @@ router.post("/chats/message", (req, res) => {
         chatId: chatid, 
         sender: req.session.user.username,
         text: text,
-        date: new Date().toLocaleString()
+        date: new Date().toLocaleString('da-DK')
     };
 
     
