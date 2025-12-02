@@ -1,29 +1,34 @@
-async function loginUser() {
+document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
 
+    // Vi tjekker om formen findes, før vi gør noget
     if (loginForm) {
         loginForm.addEventListener("submit", async (event) => {
-            event.preventDefault(); // Prevent default form submission
+            
+            // 1. STOPPER formen i at genindlæse siden (vigtigt!)
+            event.preventDefault(); 
 
-            const username = loginForm.username.value
-            const password = loginForm.password.value
+            const username = loginForm.username.value;
+            const password = loginForm.password.value;
 
             try {
+                // 2. Sender data til serveren i baggrunden
                 const res = await fetch("/loginForm", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ username: username, password: password }) 
                 });
+
+                // 3. Hvis serveren siger "OK" (status 200)
                 if (res.ok) {
-                    window.location.href = "/";
+                    window.location.href = "/"; // Send brugeren til forsiden
                 } else {
                     alert("Fejl: Forkert brugernavn eller adgangskode");
                 }
             } catch (err) {
-                console.error("fejl", err);
+                console.error("Teknisk fejl:", err);
+                alert("Der skete en teknisk fejl. Prøv igen senere.");
             }
-    })
-}
-}
-
-document.addEventListener("DOMContentLoaded", loginUser);
+        });
+    }
+});

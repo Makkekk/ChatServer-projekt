@@ -3,9 +3,16 @@ html(lang="da")
   head
     meta(charset="UTF-8")
     title= title
-    link(rel="stylesheet", href="/assets/css/Opret_Bruger_side.css")
+    link(rel="stylesheet", href="/assets/css/style.css")
   body
 
-    if username
-      p Du er logget ind som #{username} (Niveau: #{niveau})
-      a(href="/logout") Log ud
+    header
+      div.header-left
+        img.logo(src="/assets/images/logo.png", alt="Chat Logo") 
+        a(href="/") Hjem
+
+      if username
+        div.header-right
+          p #{username}
+          p.badge (Niveau #{niveau})
+          a.btn-logout(href="/logout") Log ud

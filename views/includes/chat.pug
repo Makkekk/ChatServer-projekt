@@ -1,16 +1,20 @@
 include header.pug
 
-h1#chatTitle Chat: #{chatName || 'Indlæser...'}
-p
-  a(href='/') ← Tilbage til chats
+// Vi wrapper indholdet i main, så det passer med body-griddet (auto 1fr)
+main
+  div.chat-page
+    // 1. Øverste kasse (Header i chatten)
+    div(style="padding: 20px; border-bottom: 1px solid #ddd;")
+      h1 #{chatName || 'Chat'}
+      a(href="/" style="font-size: 0.9em; color: #666;") ← Tilbage til oversigt
 
-h2 Beskeder
-div#messages
+    // 2. Midterste kasse (Beskederne - denne vil nu fylde ud!)
+    div#messages
 
-h2 Send besked
-textarea(id='messageText', placeholder='Skriv din besked...')
-br
-button(type='button', onclick=`sendMessage('${chatId}')`) Send
+    // 3. Nederste kasse (Input feltet)
+    div.chat-input-area
+      textarea(id='messageText', placeholder='Skriv en besked...' style="resize: none; height: 50px;")
+      button(type='button', onclick=`sendMessage('${chatId}')`) Send
 
 script.
   const currentChatId = "#{chatId}";

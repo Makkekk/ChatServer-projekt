@@ -41,27 +41,29 @@ async function loadChats() {
                 const a = document.createElement("a")
 
                 a.href = `/chats/${chat.id}`;
-                a.textContent = chat.name // Safe against XSS
-                li.appendChild(a);
+                a.textContent = chat.name 
+                li.appendChild(a)
 
                 if (currentUser && (userNiveau === 3 || (userNiveau === 2 && chat.ejer === currentUser))) {
-                    const deleteBtn = document.createElement("button");
-                    deleteBtn.type = "button";
-                    deleteBtn.textContent = "Slet";
+                    const deleteBtn = document.createElement("button")
+                    deleteBtn.type = "button"
+                    deleteBtn.textContent = "Slet"
+                    deleteBtn.className = "btn-small btn-delete"
 
                     deleteBtn.onclick = function () {
                         deleteChat(chat.id);
                     };
                     const edit = document.createElement("button");
-                    edit.type = "button";
-                    edit.textContent = "Rediger";
+                    edit.type = "button"
+                    edit.textContent = "Rediger"
+                    edit.className = "btn-small btn-edit"
 
                     edit.onclick = function () {
-                        editChat(chat.id);
+                        editChat(chat.id)
                     }
-
-                    li.appendChild(deleteBtn);
                     li.appendChild(edit);
+                    li.appendChild(deleteBtn);
+                    
                 }
 
                 container.appendChild(li)

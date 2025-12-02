@@ -1,35 +1,47 @@
+
 async function createChat() {
     const createForm = document.getElementById("createChatForm");
 
     if (createForm) {
         createForm.addEventListener("submit", async (event) => {
-            event.preventDefault();
+            // 1. STOPPER formen i at genindlæse siden
+            event.preventDefault(); 
 
-            const inputField = createForm.querySelector("input[name='chatName']");
-            const chatName = inputField.value;
+            // Hent værdien fra input-feltet
+            const chatNameInput = createForm.querySelector('input[name="chatName"]');
+            const chatName = chatNameInput.value;
 
             try {
+                // 2. Send data til serveren (POST request)
                 const res = await fetch("/chats", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ name: chatName })
+                    body: JSON.stringify({ name: chatName }) 
                 });
 
+                
                 if (res.ok) {
-                    const newChat = await res.json();
-                    window.location.href = `/chats/${newChat.id}`;  // NU: /chats/:id
-                }
-                else {
-                    alert("Fejl: Kunne ikke oprette chat");
+                    // Tøm input-feltet så det er klar til en ny chat
+                    chatNameInput.value = "";
+
+                    
+                    if (typeof loadChats === 'function') {
+                        loadChats(); 
+                    } else {
+                        // Hvis loadChats ikke virker, så genindlæs siden som fallback
+                        window.location.reload(); 
+                    }
+                } else {
+                    alert("Kunne ikke oprette chatten. Prøv igen.");
                 }
             } catch (err) {
-                console.error("Error creating chat:", err);
+                console.error("Fejl ved oprettelse:", err);
             }
-        });
+        })
     }
 }
 
-// createAccount funktionen ser fin ud som den er (den reloader allerede ved at gå til "/")
+
 async function createAccount() {
     const createForm = document.getElementById("createAccountForm");
 

@@ -1,29 +1,36 @@
 include header.pug
 
+
+//overskrift uden for grid
+h1(style="text-align: center; margin-top: 20px;") Velkommen, #{username}
+
+
+.listeSide-grid
+
+  // Boks 1: Dine chats
+  div.card 
+    h2 Dine chats
+    ul#chatList
+      li Indlæser chats...
+
+  // Boks 2: Opret ny chat
+  div.card
+    h2 Opret ny chat
+    form(id="createChatForm")
+      input(type='text', name='chatName', placeholder='Navn på chat', required)
+      button(type='submit', style="margin-top: 10px") Opret
+
+  // Boks 3: Admin (vises kun hvis relevant)
+  if niveau === 3
+    div.card
+      h2 Admin Panel
+      p Slet brugere her
+      ul#userList
+        li Indlæser brugere...
+
 script. 
   const currentUser = "#{username}";
   const userNiveau = #{niveau};
-
-h1 Velkommen, #{username}
-
-h2 Dine chats
-
-
-ul#chatList
-  li Indlæser chats...
-
-if niveau === 3
-  hr
-  h2 Administer brugere
-  ul#userList
-    li Indlæser brugere...
-
-h1 Opret ny chat
-
-form(id="createChatForm")
-  input(type='text', name='chatName', placeholder='Indtast chatnavn', required)
-  button(type='submit') Opret chat
-
 
 script(src='/assets/javaScript/deleteScript.js')
 script(src='/assets/javaScript/load.js')
