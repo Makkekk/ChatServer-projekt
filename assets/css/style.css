@@ -60,9 +60,10 @@ font-weight: bold;
 /* "Box Layout" - Centrerer indholdet midt på skærmen (god til Login/Opret) */
 .center-page {
     display: grid;
-    place-items: center; /* Magisk grid-kommando der centrerer alt */
+    place-items: center;
     height: 100%;
     padding: 20px;
+
 }
 
 /* "ListeSide Layout" - Laver kolonner automatisk (god til lister) */
@@ -76,14 +77,13 @@ font-weight: bold;
     width: 100%;
 }
 
+
+
 /* "Chat Layout" - Låser bunden fast */
 .chat-page {
     display: grid;
-    /* auto = Overskriften fylder det den skal */
-    /* 1fr  = Beskederne tager AL resten af pladsen (det midterste stykke) */
-    /* auto = Input-feltet i bunden fylder det den skal */
     grid-template-rows: auto 1fr auto; 
-    height: 85vh; /* Højden på chatboksen */
+    height: 50vh; /* Højden på chatboksen */
     max-width: 800px;
     margin: 20px auto;
     background: white;
@@ -191,6 +191,13 @@ ul#chatList li a{
     border-radius: 50%;
     background: white;
     padding: 2px;
+}
+
+.login-logo {
+    display: block;
+    margin : 0 auto 10px auto;
+    width: 150;
+    height: 150px;
 }
 
 .badge {
