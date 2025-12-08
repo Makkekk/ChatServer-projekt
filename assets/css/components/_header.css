@@ -23,10 +23,6 @@ header a {
     align-items: center;
 }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> css-edit
 .header-left a{
 color: white;
 text-decoration: none;
@@ -38,10 +34,5 @@ font-weight: bold;
     gap: 15px;
     align-items: center;
     color: white;
-<<<<<<< HEAD
     grid-template-columns: auto auto auto;
 }
-=======
-    grid-template-columns: auto auto;
-}
->>>>>>> css-edit
