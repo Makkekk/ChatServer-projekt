@@ -1,0 +1,9 @@
+/* Card component styles */
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: grid;
+    gap: 15px; /* Afstand mellem elementer inde i kortet */
+}

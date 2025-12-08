@@ -1,0 +1,36 @@
+/* Layout specific styles */
+
+/* "Box Layout" - Centrerer indholdet midt på skærmen (god til Login/Opret) */
+.center-page {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    padding: 20px;
+
+}
+
+/* "ListeSide Layout" - Laver kolonner automatisk (god til lister) */
+.listeSide-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Laver så mange kolonner der er plads til */
+    gap: 20px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+
+
+/* "Chat Layout" - Låser bunden fast */
+.chat-page {
+    display: grid;
+    grid-template-rows: auto 1fr auto; 
+    height: 50vh; /* Højden på chatboksen */
+    max-width: 800px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden; /* Sørger for at indhold ikke stikker ud */
+}

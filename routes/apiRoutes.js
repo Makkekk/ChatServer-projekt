@@ -149,9 +149,9 @@ router.post("/chats/message", (req, res) => {
     
     if (!chat.messages) {
       chat.messages = []; 
-    } else {
+    } 
+    
     chat.messages.push(newMessage);
-    }
     saveChats(chats);
 
     res.json(newMessage);
