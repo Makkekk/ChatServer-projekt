@@ -18,7 +18,6 @@ router.get("/chats", (req, res) => {
     res.json(chats);
 });
 
-
 // GET /chats/:id (Specifik chat)
 router.get("/chats/:id", (req, res) => {
     const chats = getChats();
