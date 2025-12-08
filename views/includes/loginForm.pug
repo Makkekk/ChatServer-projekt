@@ -1,28 +1,31 @@
-// Hoved-containeren centrerer indholdet
-div.center-page 
-    
-    // Card laver et kort layout til login-formularen
-    
-    div.card(style="width: 100%; max-width: 400px;")
+//- Centrerer siden
+.center-page
+    //- BEM Block: login-form
+    .login-form
 
-        img.login-logo(src="/assets/images/logo.png", alt="Logo")
-        h1 Log ind på din konto
+        img.login-form__logo(src="/assets/images/logo.png", alt="Logo")
+        h1.login-form__title Log ind på din konto
 
-        //holder form fordi google leder efter form og det er en service. Vi anullere bare requestet inde i javascript
-        form(id="loginForm") 
-            div
-                label(for="username") Brugernavn:
-                input(type="text" id="username" name="username", placeholder="Indtast dit brugernavn", required)
+        //- BEM Element: form
+        form#loginForm.login-form__form
+            //- BEM Element: group
+            .login-form__group
+                label.login-form__label(for="username") Brugernavn:
+                input.login-form__input(type="text" id="username" name="username", placeholder="Indtast dit brugernavn", required)
             
-            div(style="margin-top: 10px;")
-                label(for="password") Adgangskode:
-                input(type="password" id="password" name="password", placeholder="Indtast din adgangskode", required)
+            //- BEM Element: group
+            .login-form__group
+                label.login-form__label(for="password") Adgangskode:
+                input.login-form__input(type="password" id="password" name="password", placeholder="Indtast din adgangskode", required)
 
-            button(type="submit", style="margin-top: 20px; width: 100%") Log ind
+            //- BEM Element: button
+            button.login-form__button(type="submit") Log ind
             
-            p(style="margin-top: 15px; text-align: center;") Har du ikke en konto?
+            //- BEM Element: signup prompt
+            p.login-form__signup-prompt
+                | Har du ikke en konto?
                 br
-                a(href="/createAccount") Opret bruger her
+                a.login-form__signup-link(href="/createAccount") Opret bruger her
 
     p Kreation af Simon, Jamal og Karsten
 

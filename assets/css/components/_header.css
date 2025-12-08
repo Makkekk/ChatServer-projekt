@@ -1,0 +1,39 @@
+/* Header component styles */
+header {
+    background: linear-gradient(135deg, #0078d7, #005a9e);
+    color: white;
+    padding: 1rem 2rem;
+    display: grid;
+    grid-template-columns: auto auto; /* Logo til venstre, Links til højre */
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+
+header a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    margin-left: 20px;
+}
+.header-left {
+    display: grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+}
+
+
+.header-left a{
+color: white;
+text-decoration: none;
+font-weight: bold;
+}
+
+.header-right {
+    display: grid;
+    gap: 15px;
+    align-items: center;
+    color: white;
+    grid-template-columns: auto auto;
+}

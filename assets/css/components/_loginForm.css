@@ -1,0 +1,65 @@
+/* Styles for the login form component */
+
+/* The main block for the login form */
+.login-form {
+    /* Copied from the old .card style */
+    background: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: grid;
+    gap: 15px; /* Afstand mellem elementer inde i kortet */
+    
+    /* From old inline styles */
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Logo inside the login form */
+.login-form__logo {
+    /* Copied from the old .login-logo style */
+    display: block;
+    margin: 0 auto 10px auto;
+    width: 150px;
+    height: 150px;
+}
+
+/* Title */
+.login-form__title {
+    text-align: center;
+}
+
+/* A group of a label and an input */
+.login-form__group {
+    display: grid;
+    gap: 5px; /* A bit of space between label and input */
+}
+
+/* Form labels */
+.login-form__label {
+    font-weight: bold;
+}
+
+/* Form inputs - inherits from the global 'input' style but can be overridden here if needed */
+.login-form__input {
+    /* No specific styles needed for now, it uses the global input style */
+}
+
+/* The main submit button */
+.login-form__button {
+    /* Inherits from global 'button' style */
+    margin-top: 10px; /* Replaces old inline style margin */
+    width: 100%;
+}
+
+/* The text prompting the user to sign up */
+.login-form__signup-prompt {
+    margin-top: 15px;
+    text-align: center;
+}
+
+/* The link to the signup page */
+.login-form__signup-link {
+    font-weight: bold;
+    color: #0078d7; /* Match the button color */
+}

@@ -1,0 +1,17 @@
+/* Chat component styles */
+/* Specifikt for chat-beskeder */
+#messages {
+    background-color: #fafafa;
+    padding: 20px;
+    overflow-y: auto; /* Scrollbar hvis nødvendigt */
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.chat-input-area {
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1fr auto; /* Input felt fylder mest, knappen kun lidt */
+    gap: 10px;
+    background: white;
+}
