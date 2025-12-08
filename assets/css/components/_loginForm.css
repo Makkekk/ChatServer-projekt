@@ -1,23 +1,54 @@
-/* Styles for the login form component */
-
-/* The main block for the login form */
-.login-form {
-    /* Copied from the old .card style */
-    background: white;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+/* Centering container for the entire page */
+.page-container {
     display: grid;
-    gap: 15px; /* Afstand mellem elementer inde i kortet */
-    
-    /* From old inline styles */
+    place-items: center;
+    min-height: 100vh;
     width: 100%;
-    max-width: 400px;
+    background-color: #fdf7ee; /* User's background color */
+    padding: 20px; /* Some padding for smaller screens */
+}
+
+/* The new main card that wraps both form and image */
+.split-card {
+    display: flex;
+    max-width: 1000px;
+    width: 100%;
+    background: white;
+    border-radius: 20px; /* Using the radius from user's login-form style */
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    overflow: hidden; /* This is key to making the corners apply to the image */
+}
+
+/* Left side of the card (form) */
+.split-card__form-wrapper {
+    flex-basis: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+}
+
+/* Right side of the card (image) */
+.split-card__image-wrapper {
+    flex-basis: 50%;
+}
+
+.split-card__image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Fill the container, cropping if necessary */
+}
+
+/* Styles for the login form component itself (now simplified) */
+.login-form {
+    display: grid;
+    gap: 15px;
+    width: 100%;
 }
 
 /* Logo inside the login form */
 .login-form__logo {
-    /* Copied from the old .login-logo style */
     display: block;
     margin: 0 auto 10px auto;
     width: 150px;
@@ -32,7 +63,7 @@
 /* A group of a label and an input */
 .login-form__group {
     display: grid;
-    gap: 5px; /* A bit of space between label and input */
+    gap: 5px;
 }
 
 /* Form labels */
@@ -40,15 +71,14 @@
     font-weight: bold;
 }
 
-/* Form inputs - inherits from the global 'input' style but can be overridden here if needed */
+/* Form inputs */
 .login-form__input {
     /* No specific styles needed for now, it uses the global input style */
 }
 
 /* The main submit button */
 .login-form__button {
-    /* Inherits from global 'button' style */
-    margin-top: 10px; /* Replaces old inline style margin */
+    margin-top: 10px;
     width: 100%;
 }
 
@@ -63,3 +93,12 @@
     font-weight: bold;
     color: #0078d7; /* Match the button color */
 }
+
+/* Credits text at the bottom of the page */
+.login-form__credits {
+    text-align: center;
+    margin-top: 20px;
+    color: #555;
+    font-size: 0.9em;
+    }
+

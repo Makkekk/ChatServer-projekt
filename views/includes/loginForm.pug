@@ -1,32 +1,41 @@
-//- Centrerer siden
-.center-page
-    //- BEM Block: login-form
-    .login-form
+//- Page container to center the card
+.page-container
+    //- The new card that will wrap both form and image
+    .split-card
+        //- BEM Block: Left side (form)
+        .split-card__form-wrapper
+            //- BEM Block: login-form (now without its own card styles)
+            .login-form
+                img.login-form__logo(src="/assets/images/log-in.jpg", alt="Logo")
+                h1.login-form__title Log ind på din konto
 
-        img.login-form__logo(src="/assets/images/logo.png", alt="Logo")
-        h1.login-form__title Log ind på din konto
+                //- BEM Element: form
+                form#loginForm.login-form__form
+                    //- BEM Element: group
+                    .login-form__group
+                        label.login-form__label(for="username") Brugernavn:
+                        input.login-form__input(type="text" id="username" name="username", placeholder="Indtast dit brugernavn", required)
+                    
+                    //- BEM Element: group
+                    .login-form__group
+                        label.login-form__label(for="password") Adgangskode:
+                        input.login-form__input(type="password" id="password" name="password", placeholder="Indtast din adgangskode", required)
 
-        //- BEM Element: form
-        form#loginForm.login-form__form
-            //- BEM Element: group
-            .login-form__group
-                label.login-form__label(for="username") Brugernavn:
-                input.login-form__input(type="text" id="username" name="username", placeholder="Indtast dit brugernavn", required)
+                    //- BEM Element: button
+                    button.login-form__button(type="submit") Log ind
+                    
+                    //- BEM Element: signup prompt
+                    p.login-form__signup-prompt
+                        | Har du ikke en konto?
+                        br
+                        a.login-form__signup-link(href="/createAccount") Opret bruger her
             
-            //- BEM Element: group
-            .login-form__group
-                label.login-form__label(for="password") Adgangskode:
-                input.login-form__input(type="password" id="password" name="password", placeholder="Indtast din adgangskode", required)
+            p.login-form__credits Kreation af Simon, Jamal og Karsten
+        
+        //- BEM Block: Right side (image)
+        .split-card__image-wrapper
+            img.split-card__image(src="/assets/images/logIn_graphics.png", alt="Decorative image")
 
-            //- BEM Element: button
-            button.login-form__button(type="submit") Log ind
-            
-            //- BEM Element: signup prompt
-            p.login-form__signup-prompt
-                | Har du ikke en konto?
-                br
-                a.login-form__signup-link(href="/createAccount") Opret bruger her
-
-    p Kreation af Simon, Jamal og Karsten
+script(src='/assets/javaScript/login.js')
 
 script(src='/assets/javaScript/login.js')
