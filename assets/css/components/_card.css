@@ -1,6 +1,7 @@
 /* Card component styles */
 .card {
     background: white;
+<<<<<<< HEAD
     padding: 15px;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.1);
@@ -17,3 +18,11 @@
     border-bottom: 2px solid #f4f4f9;
     padding-bottom: 15px;
 }
+=======
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: grid;
+    gap: 15px; /* Afstand mellem elementer inde i kortet */
+}
+>>>>>>> css-edit

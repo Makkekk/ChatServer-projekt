@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 //- Page container to center the card
 .page-container
     //- The new card that will wrap both form and image
@@ -37,5 +38,37 @@
             img.split-card__image(src="/assets/images/logIn_graphics.png", alt="Decorative image")
 
 script(src='/assets/javaScript/login.js')
+=======
+//- Centrerer siden
+.center-page
+    //- BEM Block: login-form
+    .login-form
+
+        img.login-form__logo(src="/assets/images/logo.png", alt="Logo")
+        h1.login-form__title Log ind på din konto
+
+        //- BEM Element: form
+        form#loginForm.login-form__form
+            //- BEM Element: group
+            .login-form__group
+                label.login-form__label(for="username") Brugernavn:
+                input.login-form__input(type="text" id="username" name="username", placeholder="Indtast dit brugernavn", required)
+            
+            //- BEM Element: group
+            .login-form__group
+                label.login-form__label(for="password") Adgangskode:
+                input.login-form__input(type="password" id="password" name="password", placeholder="Indtast din adgangskode", required)
+
+            //- BEM Element: button
+            button.login-form__button(type="submit") Log ind
+            
+            //- BEM Element: signup prompt
+            p.login-form__signup-prompt
+                | Har du ikke en konto?
+                br
+                a.login-form__signup-link(href="/createAccount") Opret bruger her
+
+    p Kreation af Simon, Jamal og Karsten
+>>>>>>> css-edit
 
 script(src='/assets/javaScript/login.js')

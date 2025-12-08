@@ -1,24 +1,32 @@
 /* ListeSide component styles */
+<<<<<<< HEAD
 h1 {
     text-align: center;
     margin-top: 20px;
     color: #0078d7;
 }
 
+=======
+>>>>>>> css-edit
 ul#chatList {
     display : grid;
     gap: 10px;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #eee;
+<<<<<<< HEAD
     max-height: 400px;
     overflow-y: auto;
 }
+=======
+}   
+>>>>>>> css-edit
 
 ul#chatList li a{
     text-decoration: none;
     color: #333;
     font-weight: 700;
+<<<<<<< HEAD
     margin-right: auto;
 }
 
@@ -80,3 +88,6 @@ ul#userList li {
     height: auto;
     border-radius: 50%;
 }
+=======
+}
+>>>>>>> css-edit
