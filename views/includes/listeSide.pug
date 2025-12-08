@@ -2,29 +2,27 @@ include header.pug
 
 
 //overskrift uden for grid
-h1(style="text-align: center; margin-top: 20px;") Velkommen, #{username}
+h1 Velkommen, #{username}
 
 
 .listeSide-grid
+  div.card.main-card 
+    
 
-  // Boks 1: Dine chats
-  div.card 
-    h2 Dine chats
+    div.card-header
+      h2 Dine chats
+      
+      form(id="createChatForm" class="inline-create-form")
+        input(type='text', name='chatName', placeholder='Navn på ny chat', required)
+        button(type='submit') + Opret
+
     ul#chatList
       li Indlæser chats...
 
-  // Boks 2: Opret ny chat
-  div.card
-    h2 Opret ny chat
-    form(id="createChatForm")
-      input(type='text', name='chatName', placeholder='Navn på chat', required)
-      button(type='submit', style="margin-top: 10px") Opret
-
-  // Boks 3: Admin (vises kun hvis relevant)
   if niveau === 3
     div.card
-      h2 Admin Panel
-      p Slet brugere her
+      div.card-header
+        h2 Admin Panel
       ul#userList
         li Indlæser brugere...
 

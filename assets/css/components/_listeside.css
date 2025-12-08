@@ -1,11 +1,19 @@
 /* ListeSide component styles */
+h1 {
+    text-align: center;
+    margin-top: 20px;
+    color: #0078d7;
+}
+
 ul#chatList {
     display : grid;
     gap: 10px;
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #eee;
-}   
+    max-height: 400px;
+    overflow-y: auto;
+}
 
 ul#chatList li a{
     text-decoration: none;
@@ -18,4 +26,48 @@ ul#chatList li {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 0;}
+    padding: 5px 0;
+}
+
+.listeSide-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap : 20px;
+    max-width: 600px;
+    margin : 0 auto;
+    width: 100%;
+}
+
+
+.inline-create-form {
+    display: flex;
+    gap: 10px;
+}
+
+.inline-create-form input {
+    padding: 8px;
+    font-size: 14px;
+}
+
+.inline-create-form button {
+    padding: 8px 15px;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+ul#userList {
+    display : grid;
+    gap: 10px;
+    align-items: center;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+    max-height: 400px; /* Samme max-højde */
+    overflow-y: auto;  /* Scroll hvis nødvendigt */
+}
+
+ul#userList li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+}

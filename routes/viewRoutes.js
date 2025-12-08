@@ -38,8 +38,6 @@ router.get("/chats/:id", async (req, res) => {
 });
 
 
-router.get("/loginForm", (req, res) => 
-    res.render("includes/loginForm"));
 
 router.get("/createAccount", (req, res) => 
     res.render("includes/createAccount"));
