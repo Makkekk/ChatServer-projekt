@@ -50,6 +50,7 @@ router.get("/chats/:id/messages", (req, res) => {
     const chat = chats.find(c => c.id === req.params.id);
 
     //retuner arrayet inde i chats
+    if (!chat) return res.status(404).json({ error: "Chat ikke fundet "})
     res.json(chat.messages);
 });
 
@@ -135,7 +136,8 @@ router.post("/chats/message", (req, res) => {
     
    
     const chat = chats.find(c => c.id === chatid);
-    if (!chat) return res.status(404).json({ error: "Chat not found" });
+    if (!chat)
+         return res.status(404).json({ error: "Chat not found" });
 
 
     const newMessage = {
@@ -161,7 +163,8 @@ router.post("/chats/message", (req, res) => {
 // GET /users (List users)
 router.get("/users", (req, res) => {
     
-    if (req.session.user.niveau !== 3) return res.status(403).json({ error: "Admin only" });
+    if (req.session.user.niveau !== 3) 
+        return res.status(403).json({ error: "Admin only" });
     
     const users = getUsers();
     
@@ -192,7 +195,7 @@ router.get("/users/:id/messages", (req,res)=>{
     const user = users.find(u => u.id === req.params.id)
 
     if (!user) {   
-    res.status(404).json({ error: "User not found" })
+        return res.status(404).json({ error: "User not found" })
     }
 
     const chat = getChats()
@@ -205,6 +208,7 @@ router.get("/users/:id/messages", (req,res)=>{
             }
         })
     });
+
     if (userMessages.length > 0) {
     res.json(userMessages)
     } else {

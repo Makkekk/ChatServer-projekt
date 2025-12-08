@@ -21,7 +21,9 @@ router.post("/createAccount", (req, res) => {
     const password = req.body.password;
     const users = getUsers();
     
-    if (users.find(u => u.username === username)) return res.status(409).send("User exists");
+    if (users.find(u => u.username === username)) 
+        return res.status(409).send("User exists");
+    
     const newUser = {
         id: Date.now().toString(),
         username: username,
