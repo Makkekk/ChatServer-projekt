@@ -71,3 +71,12 @@ ul#userList li {
     align-items: center;
     padding: 5px 0;
 }
+
+
+.top-billede {
+    display: block;
+    margin: 0 auto 20px auto;
+    max-width: 150px;
+    height: auto;
+    border-radius: 50%;
+}
