@@ -3,19 +3,17 @@ include header.pug
 
 //overskrift uden for grid
 h1 Velkommen, #{username}
-img.top-billede(src="/assets/images/jamalhalal.jpg", alt="Velkommen Billede")
 
 
 .listeSide-grid
   div.card.main-card 
     
-
     div.card-header
       h2 Dine chats
       
       form(id="createChatForm" class="inline-create-form")
         input(type='text', name='chatName', placeholder='Navn på ny chat', required)
-        button(type='submit') + Opret
+        button(type='submit') Opret
 
     ul#chatList
       li Indlæser chats...

@@ -106,30 +106,6 @@ async function editChat(chatId) {
     }
 }
 
-/*async function editChat(chatId) {
-    const nytNavn = prompt("Indtast det nye navn på chatten");
-
-    if(!nytNavn){
-        return;
-    }
-    try {
-        const res = await fetch (`/chats/${chatId}`, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({navn: nytNavn})
-        });
-        if (res.ok){
-            loadChats();
-        } else {
-            alert("Du har ikke rettigheder til at redigere denne chat, eller er der sket en fejl");
-        }
-    }catch(err){
-            console.error("Fejl ved opdaterin", err);
-            alert("Der opstod en netværksfejl.");
-        }
-    }*/
 
 // --- LOAD USERS (For Admin) ---
 async function loadusers() {
@@ -156,8 +132,12 @@ async function loadusers() {
             const btn = document.createElement("button");
             btn.type = "button";
             btn.textContent = "Slet";
+            btn.className = "delete-user-btn delete-user-btn:hover ";
+
             // Assign function reference directly
-            btn.onclick = function () { deleteUser(user.id); };
+            btn.onclick = function () {
+                deleteUser(user.id); 
+            };
 
             li.appendChild(span);
             li.appendChild(btn);
@@ -196,8 +176,4 @@ async function loadMessages(chatId) {
         console.error("Fejl ved indlæsning af beskeder:", err);
         document.querySelector("#messages").textContent = "Fejl: Kunne ikke indlæse beskeder.";
     }
-}
-
-async function loadLoginForm() {
-
 }
