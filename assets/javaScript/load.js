@@ -78,35 +78,6 @@ async function loadChats() {
 }
 
 
-
-// ---------------   editChats-------------------------------------
-async function editChat(chatId) {
-    const nytNavn = prompt("Indtast nyt navn på chatten:", "");
-    if (!nytNavn || nytNavn.trim() === "") return;
-
-    try {
-        const res = await fetch(`/chats/${chatId}`, {
-            method: "PUT",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({name: nytNavn.trim() })
-        });
-
-        if (res.ok) {
-            const li = document.getElementById(`chat-${chatId}`);
-            const a = li.querySelector("a");
-            a.textContent = nytNavn.trim();
-            alert("Chat navn opdateret!");
-        } else {
-            const data = await res.json();
-            alert("Fejl: " + (data.error || "Kunne ikke opdatere"));
-        }
-    } catch (err) {
-        console.error("Fejl ved redigering:", err);
-        alert("Netværksfejl");
-    }
-}
-
-
 // --- LOAD USERS (For Admin) ---
 async function loadusers() {
     const container = document.querySelector("#userList");
@@ -114,7 +85,6 @@ async function loadusers() {
 
     try {
         const res = await fetch("/users");
-
         if (res.status === 403) return;
 
         const users = await res.json();
@@ -124,27 +94,72 @@ async function loadusers() {
             const li = document.createElement("li");
             li.id = `user-row-${user.id}`;
 
-            // Create Span for info
-            const span = document.createElement("span");
-            span.textContent = `${user.username} (Niveau: ${user.niveau}) `;
+            
+            const leftGroup = document.createElement("div");
+            leftGroup.className = "user-info-group"; 
 
-            // Create Delete Button
+            const nameSpan = document.createElement("span");
+            nameSpan.textContent = user.username;
+            nameSpan.style.fontWeight = "bold"; 
+            nameSpan.style.marginRight = "10px";
+
+            // 2. Styled Niveau Dropdown
+            const select = document.createElement("select");
+            select.className = "level-select"; 
+            
+            [1, 2, 3].forEach(niveau => {
+                const option = document.createElement("option");
+                option.value = niveau;
+                option.textContent = `Niveau ${niveau}`;
+                if (user.niveau === niveau) option.selected = true;
+                select.appendChild(option);
+            });
+
+            select.onchange = function() {
+                updateUserNiveau(user.id, this.value);
+            };
+
+            
+            leftGroup.appendChild(nameSpan);
+            leftGroup.appendChild(select);
+
+            
             const btn = document.createElement("button");
             btn.type = "button";
             btn.textContent = "Slet";
-            btn.className = "delete-user-btn delete-user-btn:hover ";
+            btn.className = "btn-small btn-delete";
+            btn.onclick = function () { deleteUser(user.id); };
 
-            // Assign function reference directly
-            btn.onclick = function () {
-                deleteUser(user.id); 
-            };
-
-            li.appendChild(span);
+            // Add groups to the list item
+            li.appendChild(leftGroup);
             li.appendChild(btn);
+            
             container.appendChild(li);
         });
     } catch (e) {
         console.error("Failed to load users", e);
+    }
+}
+
+
+// --- UPDATE USER NIVEAU (For Admin) ---
+async function updateUserNiveau(userId, newNiveau) {
+    try {
+        const res = await fetch(`/users/${userId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ niveau: parseInt(newNiveau) })
+        });
+        if (res.ok) {
+            alert("Bruger niveau opdateret!");
+        } else {
+            const data = await res.json();
+            alert("Fejl: " + (data.error || "Kunne ikke opdatere niveau"));
+            loadusers();
+        }
+    } catch (err) {
+        console.error("Fejl ved opdatering af niveau:", err);
+        alert("Netværksfejl");
     }
 }
 

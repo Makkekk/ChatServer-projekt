@@ -61,8 +61,8 @@ ul#userList {
     align-items: center;
     padding: 10px;
     border-bottom: 1px solid #eee;
-    max-height: 400px; /* Samme max-højde */
-    overflow-y: auto;  /* Scroll hvis nødvendigt */
+    max-height: 400px; 
+    overflow-y: auto;  /
 }
 
 ul#userList li {
@@ -70,5 +70,36 @@ ul#userList li {
     justify-content: space-between;
     align-items: center;
     padding: 5px 0;
+}
+
+/* --- User List Styling --- */
+
+.user-info-group {
+  display: flex;
+  align-items: center;
+  gap: 10%; /* Space between name and dropdown */
+}
+
+.level-select {
+  appearance: none;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.4rem 2rem 0.4rem 0.8rem; 
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.level-select:hover {
+  border-color: #b0b0b0;
+  background-color: #fff;
+}
+
+.level-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
 }
 

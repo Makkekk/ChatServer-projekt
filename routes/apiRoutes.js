@@ -211,6 +211,37 @@ router.get("/users/:id/messages", (req,res)=>{
     }
 });
 
+router.put("/users/:id", (req, res) => {
+    if (!req.session.user || req.session.user.niveau !== 3) {
+        return res.status(403).json({ error: "Admin only" });
+    }
+    const userId = req.params.id;
+    const newNiveau = req.body.niveau;
+
+    if (![1, 2, 3].includes(newNiveau)) {
+        return res.status(400).json({ error: "Invalid niveau" });
+    }
+
+    const users = getUsers();
+    const userIndex = users.findIndex(u => u.id === userId);
+
+    if (userIndex === -1) {
+        return res.status(404).json({ error: "User not found" });
+    }
+    //
+    if (users[userIndex].id === req.session.user.id) {
+        return res.status(400).json({ error: "Cannot change own niveau" });
+    } 
+    users[userIndex].niveau = newNiveau;
+    saveUsers(users);
+
+    res.json({ success: true, user: { id: userId, niveau: newNiveau } });
+
+})
+
+
+
+
 // DELETE /users/:id (Admin delete user)
 router.delete("/users/:id", (req, res) => {
     if (req.session.user.niveau !== 3) return res.status(403).json({ error: "Admin only" });
