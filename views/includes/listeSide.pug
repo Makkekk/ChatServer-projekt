@@ -18,16 +18,16 @@ h1 Velkommen, #{username}
     ul#chatList
       li Indlæser chats...
 
-  if niveau === 3
+  if level === 3
     div.card
       div.card-header
         h2 Admin Panel
       ul#userList
         li Indlæser brugere...
 
-script. 
+script.
   const currentUser = "#{username}";
-  const userNiveau = #{niveau};
+  const userLevel = #{level};
 
 script(src='/assets/javaScript/deleteScript.js')
 script(src='/assets/javaScript/load.js')

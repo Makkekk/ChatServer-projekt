@@ -1,16 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
     loadChats();
-    if (typeof userNiveau !== 'undefined' && userNiveau === 3) {
-        loadusers();
+    if (typeof userLevel !== 'undefined' && userLevel === 3) {
+        loadUsers();
     }
     if (typeof currentChatId !== 'undefined') {
         loadMessages(currentChatId);
     }
-    //Opdatere beskeder automatisk hvert 2. sekund
+    // Opdatere beskeder automatisk hvert 2. sekund
     setInterval(() => {
         loadMessages(currentChatId);
     }, 2000);
-})
+});
 
 // --- LOAD CHATS (til listesiden) ---
 async function loadChats() {
@@ -44,7 +44,7 @@ async function loadChats() {
                 a.textContent = chat.name 
                 li.appendChild(a)
 
-                if (currentUser && (userNiveau === 3 || (userNiveau === 2 && chat.ejer === currentUser))) {
+                if (currentUser && (userLevel === 3 || (userLevel === 2 && chat.owner === currentUser))) {
                     const deleteBtn = document.createElement("button")
                     deleteBtn.type = "button"
                     deleteBtn.textContent = "Slet"
@@ -79,7 +79,7 @@ async function loadChats() {
 
 
 // --- LOAD USERS (For Admin) ---
-async function loadusers() {
+async function loadUsers() {
     const container = document.querySelector("#userList");
     if (!container) return;
 
@@ -103,20 +103,20 @@ async function loadusers() {
             nameSpan.style.fontWeight = "bold"; 
             nameSpan.style.marginRight = "10px";
 
-            // 2. Styled Niveau Dropdown
+            // Styled Level Dropdown
             const select = document.createElement("select");
-            select.className = "level-select"; 
-            
-            [1, 2, 3].forEach(niveau => {
+            select.className = "level-select";
+
+            [1, 2, 3].forEach(level => {
                 const option = document.createElement("option");
-                option.value = niveau;
-                option.textContent = `Niveau ${niveau}`;
-                if (user.niveau === niveau) option.selected = true;
+                option.value = level;
+                option.textContent = `Level ${level}`;
+                if (user.level === level) option.selected = true;
                 select.appendChild(option);
             });
 
             select.onchange = function() {
-                updateUserNiveau(user.id, this.value);
+                updateUserLevel(user.id, this.value);
             };
 
             
@@ -142,23 +142,23 @@ async function loadusers() {
 }
 
 
-// --- UPDATE USER NIVEAU (For Admin) ---
-async function updateUserNiveau(userId, newNiveau) {
+// --- UPDATE USER LEVEL (For Admin) ---
+async function updateUserLevel(userId, newLevel) {
     try {
         const res = await fetch(`/users/${userId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ niveau: parseInt(newNiveau) })
+            body: JSON.stringify({ level: parseInt(newLevel) })
         });
         if (res.ok) {
-            alert("Bruger niveau opdateret!");
+            alert("Bruger level opdateret!");
         } else {
             const data = await res.json();
-            alert("Fejl: " + (data.error || "Kunne ikke opdatere niveau"));
-            loadusers();
+            alert("Fejl: " + (data.error || "Kunne ikke opdatere level"));
+            loadUsers();
         }
     } catch (err) {
-        console.error("Fejl ved opdatering af niveau:", err);
+        console.error("Fejl ved opdatering af level:", err);
         alert("Netværksfejl");
     }
 }

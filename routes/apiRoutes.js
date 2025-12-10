@@ -29,12 +29,12 @@ router.get("/chats/:id", (req, res) => {
 
 router.post("/chats", (req, res) => {
     const name = req.body.name;
-    const ejer = req.session.user.username;
+    const owner = req.session.user.username;
     const chats = getChats();
     const newChat = {
         id: Date.now().toString(),
         name: name,
-        ejer: ejer,
+        owner: owner,
         date: new Date().toLocaleString('da-DK'),
         messages: []
     };
@@ -52,7 +52,7 @@ router.get("/chats/:id/messages", (req, res) => {
     res.json(chat.messages);
 });
 
-// DELETE /chats/:id (slet chat for brugere med niveau 2 og 3)) 
+// DELETE /chats/:id (slet chat for brugere med level 2 og 3)
 router.delete("/chats/:id", (req, res) => {
     const chats = getChats();
     const index = chats.findIndex(c => c.id === req.params.id);
@@ -64,24 +64,24 @@ router.delete("/chats/:id", (req, res) => {
     // Level 3: kan slette alle chats
     // Level 2: kan slette egne chats
     // Level 1: kan ikke slette chats
-    const isOwner = chat.ejer === user.username;
-    
-    if (user.niveau === 3 || (user.niveau === 2 && isOwner)) {
+    const isOwner = chat.owner === user.username;
+
+    if (user.level === 3 || (user.level === 2 && isOwner)) {
         chats.splice(index, 1);
         saveChats(chats);
-        
+
         res.json({ success: true });
     } else {
         res.status(403).json({ error: "Permission denied" });
     }
 });
 
-// --- PUT /chats/:id – OPDATER CHAT-NAVN (kun ejer eller admin) ---
+// PUT /chats/:id – opdater chat-navn (kun owner eller admin)
 router.put("/chats/:id", (req, res) => {
     const chatId = req.params.id;
-    const { name: nytNavn } = req.body;
+    const { name: newName } = req.body;
 
-    if (!nytNavn || nytNavn.trim() === "") {
+    if (!newName || newName.trim() === "") {
         return res.status(400).json({ error: "Chatnavn må ikke være tomt" });
     }
 
@@ -95,33 +95,35 @@ router.put("/chats/:id", (req, res) => {
     const chat = chats[chatIndex];
     const user = req.session.user;
 
-    const erEjer = chat.ejer === user.username;
-    const erAdmin = user.niveau === 3;
+    const isOwner = chat.owner === user.username;
+    const isAdmin = user.level === 3;
 
-    if (!erAdmin && !erEjer) {
+    if (!isAdmin && !isOwner) {
         return res.status(403).json({ error: "Ingen tilladelse" });
     }
 
-    chat.name = nytNavn.trim();
+    chat.name = newName.trim();
     saveChats(chats);
 
     res.json({ success: true, chat });
 });
 
 router.get("/chats/messages/:id", (req, res) => {
-    //hent chats, eller send et tomt array hvis ingen findes
+    // Hent chats, eller send et tomt array hvis ingen findes
     const chats = getChats() || [];
     const messageId = req.params.id;
 
-    // søg efter beskeden i alle chats
+    // Søg efter beskeden i alle chats
     for (const chat of chats) {
-       
+        // Spring over hvis chatten ikke har beskeder
+        if (!chat.messages) continue;
+
         const msg = chat.messages.find(m => m.id === messageId);
-        
+
         if (msg) return res.json(msg);
     }
 
-    // 3. Not found
+    // Hvis ingen besked fundet
     res.status(404).json({ error: "Message not found" });
 });
 
@@ -159,67 +161,70 @@ router.post("/chats/message", (req, res) => {
 
 // GET /users (List users)
 router.get("/users", (req, res) => {
-    
-    if (req.session.user.niveau !== 3) return res.status(403).json({ error: "Admin only" });
-    
+    if (req.session.user.level !== 3) return res.status(403).json({ error: "Admin only" });
+
     const users = getUsers();
-    
-    const mapUser = users.map(u => ({ id: u.id, username: u.username, niveau: u.niveau }));
+
+    const mapUser = users.map(u => ({ id: u.id, username: u.username, level: u.level }));
     res.json(mapUser);
 });
 
-router.get("/users/:id", (req,res)=>{
-    if (req.session.user.niveau !== 3) 
+router.get("/users/:id", (req, res) => {
+    if (req.session.user.level !== 3)
         return res.status(403).json({ error: "Admin only" });
 
     const users = getUsers();
     const user = users.find(u => u.id === req.params.id);
 
     if (!user) {
-        res.status(404).json({ error: "User not found" })
-        } else {
-    const userToSend = { id: user.id, username: user.username, niveau: user.niveau };
-    res.json(userToSend);
+        res.status(404).json({ error: "User not found" });
+    } else {
+        const userToSend = { id: user.id, username: user.username, level: user.level };
+        res.json(userToSend);
     }
 });
 
-router.get("/users/:id/messages", (req,res)=>{
-    if (req.session.user.niveau !== 3) 
-        return res.status(403).json({ error: "Admin only" })
+router.get("/users/:id/messages", (req, res) => {
+    if (req.session.user.level !== 3)
+        return res.status(403).json({ error: "Admin only" });
 
-    const users = getUsers()
-    const user = users.find(u => u.id === req.params.id)
+    const users = getUsers();
+    const user = users.find(u => u.id === req.params.id);
 
-    if (!user) {   
-    res.status(404).json({ error: "User not found" })
+    if (!user) {
+        return res.status(404).json({ error: "User not found" });
     }
 
-    const chat = getChats()
-    const userMessages = []
+    const chats = getChats();
+    const userMessages = [];
 
-    chat.forEach(chat => {
+    chats.forEach(chat => {
+        // Spring over hvis chatten ikke har beskeder
+        if (!chat.messages) return;
+
         chat.messages.forEach(message => {
             if (message.sender === user.username) {
-                userMessages.push(message)
+                userMessages.push(message);
             }
-        })
+        });
     });
+
     if (userMessages.length > 0) {
-    res.json(userMessages)
+        res.json(userMessages);
     } else {
-        res.status(404).json({ error: "No messages" })
+        res.status(404).json({ error: "No messages" });
     }
 });
 
 router.put("/users/:id", (req, res) => {
-    if (!req.session.user || req.session.user.niveau !== 3) {
+    if (!req.session.user || req.session.user.level !== 3) {
         return res.status(403).json({ error: "Admin only" });
     }
     const userId = req.params.id;
-    const newNiveau = req.body.niveau;
+    const newLevel = req.body.level;
 
-    if (![1, 2, 3].includes(newNiveau)) {
-        return res.status(400).json({ error: "Invalid niveau" });
+    if (![1, 2, 3].includes(newLevel)) {
+        return res.status(400).json({ error: "Invalid level" });
     }
 
     const users = getUsers();
@@ -228,29 +233,29 @@ router.put("/users/:id", (req, res) => {
     if (userIndex === -1) {
         return res.status(404).json({ error: "User not found" });
     }
-    //
+
+    // Forhindrer admin i at ændre sit eget level
     if (users[userIndex].id === req.session.user.id) {
-        return res.status(400).json({ error: "Cannot change own niveau" });
-    } 
-    users[userIndex].niveau = newNiveau;
+        return res.status(400).json({ error: "Cannot change own level" });
+    }
+    users[userIndex].level = newLevel;
     saveUsers(users);
 
-    res.json({ success: true, user: { id: userId, niveau: newNiveau } });
-
-})
-
+    res.json({ success: true, user: { id: userId, level: newLevel } });
+});
 
 
 
-// DELETE /users/:id (Admin delete user)
+
+// DELETE /users/:id (slet bruger - kun admin)
 router.delete("/users/:id", (req, res) => {
-    if (req.session.user.niveau !== 3) return res.status(403).json({ error: "Admin only" });
-    
+    if (req.session.user.level !== 3) return res.status(403).json({ error: "Admin only" });
+
     const users = getUsers();
     const index = users.findIndex(u => u.id === req.params.id);
     if (index === -1) return res.status(404).json({ error: "User not found" });
 
-    // Prevent deleting self
+    // Forhindrer admin i at slette sig selv
     if (users[index].id === req.session.user.id) return res.status(400).json({ error: "Cannot delete self" });
 
     users.splice(index, 1);

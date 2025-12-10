@@ -20,14 +20,14 @@ router.post("/createAccount", (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
     const users = getUsers();
-    
+
     if (users.find(u => u.username === username)) return res.status(409).send("User exists");
     const newUser = {
         id: Date.now().toString(),
         username: username,
         password: password,
-        niveau: 1, 
-        dato: new Date()
+        level: 1,
+        date: new Date().toLocaleDateString('da-DK')
     };
     users.push(newUser);
     saveUsers(users);

@@ -3,42 +3,42 @@
     "id": "1763892668656",
     "username": "admin",
     "password": "admin",
-    "niveau": 3,
-    "dato": "2025-11-23T10:11:08.656Z"
+    "level": 3,
+    "date": "23.11.2025"
   },
   {
     "id": "1763893417626",
     "username": "test1",
     "password": "test1",
-    "niveau": 2,
-    "dato": "2025-11-23T10:23:37.626Z"
+    "level": 2,
+    "date": "23.11.2025"
   },
   {
     "id": "1763973553776",
     "username": "test2",
     "password": "test2",
-    "niveau": 1,
-    "dato": "2025-11-24T08:39:13.776Z"
+    "level": 1,
+    "date": "24.11.2025"
   },
   {
     "id": "1763974060562",
     "username": "test4",
     "password": "test4",
-    "niveau": 1,
-    "dato": "2025-11-24T08:47:40.562Z"
+    "level": 1,
+    "date": "24.11.2025"
   },
   {
     "id": "1763985407429",
     "username": "lol123",
     "password": "lol123",
-    "niveau": 1,
-    "dato": "2025-11-24T11:56:47.429Z"
+    "level": 1,
+    "date": "24.11.2025"
   },
   {
     "id": "1765194722167",
     "username": "jamalhalal",
     "password": "jamalhalal",
-    "niveau": 1,
-    "dato": "2025-12-08T11:52:02.167Z"
+    "level": 1,
+    "date": "08.12.2025"
   }
 ]

@@ -6,11 +6,10 @@ const router = express.Router();
 router.get("/", (req, res) => {
     if (!req.session.user) return res.render("includes/landingPage");
 
-    
-    // The Client JS (load.js) will call API GET /chats to fill it.
+    // Klient-side JS (load.js) kalder API GET /chats for at hente data
     res.render("includes/listeSide", {
         username: req.session.user.username,
-        niveau: req.session.user.niveau
+        level: req.session.user.level
     });
 });
 
@@ -31,9 +30,9 @@ router.get("/chats/:id", async (req, res) => {
 
     res.render("includes/chat", {
         chatId: chatId,
-        chatName: chat.name, // Send navn med direkte
+        chatName: chat.name,
         username: req.session.user.username,
-        niveau: req.session.user.niveau
+        level: req.session.user.level
     });
 });
 

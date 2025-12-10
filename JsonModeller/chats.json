@@ -2,7 +2,7 @@
   {
     "id": "1763980442204",
     "name": "test089",
-    "ejer": "admin",
+    "owner": "admin",
     "oprettelsesDato": "2025-11-24T10:34:02.204Z",
     "messages": [
       {
@@ -80,7 +80,7 @@
   {
     "id": "1764141296577",
     "name": "lol",
-    "ejer": "admin",
+    "owner": "admin",
     "oprettelsesDato": "2025-11-26T07:14:56.577Z",
     "messages": [
       {
@@ -109,14 +109,14 @@
   {
     "id": "1764141311162",
     "name": "vi bruger igen",
-    "ejer": "admin",
+    "owner": "admin",
     "oprettelsesDato": "2025-11-26T07:15:11.162Z",
     "messages": []
   },
   {
     "id": "1764152422999",
     "name": "test1234",
-    "ejer": "admin",
+    "owner": "admin",
     "oprettelsesDato": "2025-11-26T10:20:22.999Z",
     "messages": [
       {
@@ -138,13 +138,13 @@
   {
     "id": "1764330096261",
     "name": "test",
-    "ejer": "admin",
+    "owner": "admin",
     "messages": []
   },
   {
     "id": "1764326272121",
     "name": "hej chat",
-    "ejer": "admin",
+    "owner": "admin",
     "oprettelsesDato": "2025-11-28T10:37:52.121Z",
     "messages": []
   },
@@ -152,7 +152,7 @@
     "id": "1764330373851",
     "name": "Hej Hej",
     "dato": "28.11.2025, 12.46.13",
-    "ejer": "admin",
+    "owner": "admin",
     "messages": [
       {
         "id": "1764330378657",
@@ -167,7 +167,7 @@
     "id": "1764330450410",
     "name": "heh",
     "dato": "28.11.2025, 12.47.30",
-    "ejer": "admin",
+    "owner": "admin",
     "messages": [
       {
         "id": "1764330455944",
@@ -315,7 +315,7 @@
     "id": "1764330686365",
     "name": "Test12342",
     "dato": "28.11.2025, 12.51.26",
-    "ejer": "admin",
+    "owner": "admin",
     "messages": [
       {
         "id": "1764330691192",
@@ -330,7 +330,7 @@
     "id": "1764332868158",
     "name": "checktest",
     "dato": "28.11.2025, 13.27.48",
-    "ejer": "admin",
+    "owner": "admin",
     "messages": [
       {
         "id": "1764332935454",
@@ -345,7 +345,7 @@
     "id": "1764333179439",
     "name": "nychecktest",
     "date": "28.11.2025, 13.32.59",
-    "ejer": "admin",
+    "owner": "admin",
     "messages": [
       {
         "id": "1764333182450",
@@ -360,7 +360,7 @@
     "id": "1764333213431",
     "name": "check123",
     "date": "28.11.2025, 13.33.33",
-    "ejer": "admin",
+    "owner": "admin",
     "messages": [
       {
         "id": "1764333216448",
@@ -381,7 +381,7 @@
   {
     "id": "1764692202346",
     "name": "123",
-    "ejer": "admin",
+    "owner": "admin",
     "date": "2.12.2025, 17.16.42",
     "messages": [
       {
@@ -396,14 +396,14 @@
   {
     "id": "1764694354487",
     "name": "231",
-    "ejer": "test1",
+    "owner": "test1",
     "date": "2.12.2025, 17.52.34",
     "messages": []
   },
   {
     "id": "1764697088964",
     "name": "de",
-    "ejer": "admin",
+    "owner": "admin",
     "date": "2.12.2025, 18.38.08",
     "messages": [
       {
@@ -432,7 +432,7 @@
   {
     "id": "1765194747182",
     "name": "yasqueen",
-    "ejer": "jamalhalal",
+    "owner": "jamalhalal",
     "date": "8.12.2025, 12.52.27",
     "messages": [
       {
