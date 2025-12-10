@@ -82,14 +82,14 @@ router.put("/chats/:id", (req, res) => {
     const { name: newName } = req.body;
 
     if (!newName || newName.trim() === "") {
-        return res.status(400).json({ error: "Chatnavn må ikke være tomt" });
+        return res.status(400).json({ error: "You need to enter a Chat name" });
     }
 
     const chats = getChats();
     const chatIndex = chats.findIndex(c => c.id === chatId);
 
     if (chatIndex === -1) {
-        return res.status(404).json({ error: "Chat ikke fundet" });
+        return res.status(404).json({ error: "Chat not found" });
     }
 
     const chat = chats[chatIndex];
@@ -99,7 +99,7 @@ router.put("/chats/:id", (req, res) => {
     const isAdmin = user.level === 3;
 
     if (!isAdmin && !isOwner) {
-        return res.status(403).json({ error: "Ingen tilladelse" });
+        return res.status(403).json({ error: "No Permission" });
     }
 
     chat.name = newName.trim();
