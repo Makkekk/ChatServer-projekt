@@ -7,16 +7,16 @@ include header.pug
     .split-card__form-wrapper 
        .login-form
         h1 Opret dig som bruger
-        form#loginForm.login-form__form
-        .login-form__group
-          label(for="username") Brugernavn:
-          input(type='text', name='username', placeholder="Indtast dit brugernavn", required)
+        form#createAccountForm.login-form__form
+          .login-form__group
+            label(for="username") Brugernavn:
+            input(type='text', name='username', placeholder="Indtast dit brugernavn", required)
                
-        .login-form__group
-         label(for="password") Adgangskode:
-         input(type='password', name='password', placeholder="Indtast din adgangskode", required)
+          .login-form__group
+            label(for="password") Adgangskode:
+            input(type='password', name='password', placeholder="Indtast din adgangskode", required)
 
-         button.login-form__button(type='submit') Opret bruger
+            button.login-form__button(type='submit') Opret bruger
 
     .split-card__image-wrapper
       img.split-card__image(src="/assets/images/circleOfLife.png", alt="Decorative image")
@@ -28,3 +28,4 @@ include header.pug
     button(type='submit') Opret bruger
 
 script(src='/assets/javaScript/create.js')
+
