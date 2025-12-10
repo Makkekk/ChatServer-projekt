@@ -240,8 +240,6 @@ router.put("/users/:id", (req, res) => {
 })
 
 
-
-
 // DELETE /users/:id (Admin delete user)
 router.delete("/users/:id", (req, res) => {
     if (req.session.user.niveau !== 3) return res.status(403).json({ error: "Admin only" });
