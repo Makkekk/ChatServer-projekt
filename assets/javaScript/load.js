@@ -23,7 +23,6 @@ async function loadChats() {
 
         const chats = await res.json();
 
-
         container.textContent = '';
 
         if (chats.length === 0) {
@@ -37,7 +36,7 @@ async function loadChats() {
                 const li = document.createElement("li")
                 li.id = `chat-${chat.id}`;
 
-                // 
+                 
                 const a = document.createElement("a")
 
                 a.href = `/chats/${chat.id}`;
@@ -63,7 +62,6 @@ async function loadChats() {
                     }
                     li.appendChild(edit);
                     li.appendChild(deleteBtn);
-                    
                 }
 
                 container.appendChild(li)
@@ -190,5 +188,32 @@ async function loadMessages(chatId) {
     } catch (err) {
         console.error("Fejl ved indlæsning af beskeder:", err);
         document.querySelector("#messages").textContent = "Fejl: Kunne ikke indlæse beskeder.";
+    }
+}
+
+async function editChat(chatId) {
+    const nytNavn = prompt("Indtast nyt navn på chatten:", "");
+    if (!nytNavn || nytNavn.trim() === "") return;
+
+    try {
+        const res = await fetch(`/chats/${chatId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name: nytNavn.trim() })
+        });
+
+        if (res.ok) {
+            
+            const li = document.getElementById(`chat-${chatId}`);
+            const a = li.querySelector("a");
+            a.textContent = nytNavn.trim();
+           
+        } else {
+            const data = await res.json();
+            alert("Fejl: " + (data.error || "Kunne ikke opdatere"));
+        }
+    } catch (err) {
+        console.error("Fejl ved redigering:", err);
+        alert("Netværksfejl");
     }
 }
