@@ -122,16 +122,31 @@ async function loadUsers() {
             leftGroup.appendChild(select);
 
             
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.textContent = "Slet";
-            btn.className = "btn-small btn-delete";
-            btn.onclick = function () { deleteUser(user.id); };
+            // Button group til at holde knapper sammen
+            const buttonGroup = document.createElement("div");
+            buttonGroup.className = "button-group";
+
+            // Vis beskeder knap
+            const viewMessagesBtn = document.createElement("button");
+            viewMessagesBtn.type = "button";
+            viewMessagesBtn.textContent = "Vis beskeder";
+            viewMessagesBtn.className = "btn-small btn-view";
+            viewMessagesBtn.onclick = function () { viewUserMessages(user.id, user.username); };
+
+            // Slet knap
+            const deleteBtn = document.createElement("button");
+            deleteBtn.type = "button";
+            deleteBtn.textContent = "Slet";
+            deleteBtn.className = "btn-small btn-delete";
+            deleteBtn.onclick = function () { deleteUser(user.id); };
+
+            buttonGroup.appendChild(viewMessagesBtn);
+            buttonGroup.appendChild(deleteBtn);
 
             // Add groups to the list item
             li.appendChild(leftGroup);
-            li.appendChild(btn);
-            
+            li.appendChild(buttonGroup);
+
             container.appendChild(li);
         });
     } catch (e) {
@@ -161,6 +176,39 @@ async function updateUserLevel(userId, newLevel) {
     }
 }
 
+// --- VIEW USER MESSAGES (For Admin) ---
+async function viewUserMessages(userId, username) {
+    try {
+        const res = await fetch(`/users/${userId}/messages`);
+
+        if (!res.ok) {
+            if (res.status === 404) {
+                alert(`${username} har ingen beskeder endnu.`);
+                return;
+            }
+            throw new Error("Kunne ikke hente beskeder");
+        }
+
+        const messages = await res.json();
+
+        // Byg besked-visning
+        let messageText = `=== Beskeder fra ${username} (${messages.length} total) ===\n\n`;
+
+        messages.forEach((msg, index) => {
+            messageText += `${index + 1}. ${msg.text}\n`;
+            messageText += `   Dato: ${msg.date}\n`;
+            messageText += `   Chat ID: ${msg.chatId}\n\n`;
+        });
+
+        // Vis i alert
+        alert(messageText);
+
+    } catch (err) {
+        console.error("Fejl ved hentning af bruger beskeder:", err);
+        alert("Kunne ikke hente beskeder. Se konsollen for detaljer.");
+    }
+}
+
 // --- LOAD MESSAGES (For specific Chat) ---
 async function loadMessages(chatId) {
     if (!chatId) return;
@@ -174,13 +222,31 @@ async function loadMessages(chatId) {
         container.textContent = '';
 
         if (messages.length === 0) {
-            container.innerHTML = "<p>Ingen beskeder endnu.</p>";
+            const p = document.createElement("p");
+            p.textContent = "Ingen beskeder endnu.";
+            container.appendChild(p);
             return;
         }
 
         messages.forEach(msg => {
             const p = document.createElement("p");
-            p.innerHTML = `<strong>${msg.sender}:</strong> ${msg.text}<br><small>${msg.date}</small>`;
+
+            // Opret strong element for sender
+            const strong = document.createElement("strong");
+            strong.textContent = `${msg.sender}:`;
+            p.appendChild(strong);
+
+            // Tilføj mellemrum og besked tekst
+            p.appendChild(document.createTextNode(` ${msg.text}`));
+
+            // Tilføj linjeskift
+            p.appendChild(document.createElement("br"));
+
+            // Opret small element for dato
+            const small = document.createElement("small");
+            small.textContent = msg.date;
+            p.appendChild(small);
+
             container.appendChild(p);
         });
 
@@ -192,21 +258,21 @@ async function loadMessages(chatId) {
 }
 
 async function editChat(chatId) {
-    const nytNavn = prompt("Indtast nyt navn på chatten:", "");
-    if (!nytNavn || nytNavn.trim() === "") return;
+    const newName = prompt("Indtast nyt navn på chatten:", "");
+    if (!newName || newName.trim() === "") return;
 
     try {
         const res = await fetch(`/chats/${chatId}`, {
             method: "PUT",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ name: nytNavn.trim() })
+            body: JSON.stringify({ name: newName.trim() })
         });
 
         if (res.ok) {
             
             const li = document.getElementById(`chat-${chatId}`);
             const a = li.querySelector("a");
-            a.textContent = nytNavn.trim();
+            a.textContent = newName.trim();
            
         } else {
             const data = await res.json();

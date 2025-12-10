@@ -15,15 +15,26 @@ async function sendMessage(chatId) {
             const message = await res.json();
             const container = document.querySelector("#messages");
 
-            // Remove "loading" or "empty" text
-            if (container.innerHTML.includes("<p>")) {
-                 // Optional check to clear placeholder text
-            }
-
             const p = document.createElement("p");
-            p.innerHTML = `<strong>${message.sender}:</strong> ${message.text}<br><small>${message.date}</small>`;
+
+            // Vi bruger textContet for at undgå at mulige code-injections
+            const strong = document.createElement("strong");
+            strong.textContent = `${message.sender}:`;
+            p.appendChild(strong);
+
+            // Tilføj mellemrum og besked tekst
+            p.appendChild(document.createTextNode(` ${message.text}`));
+
+            // Tilføj linjeskift
+            p.appendChild(document.createElement("br"));
+
+            // Opret small element for dato
+            const small = document.createElement("small");
+            small.textContent = message.date;
+            p.appendChild(small);
+
             container.appendChild(p);
-            
+
             // Scroll to bottom
             container.scrollTop = container.scrollHeight;
 
