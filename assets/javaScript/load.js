@@ -230,14 +230,18 @@ async function loadMessages(chatId) {
 
         messages.forEach(msg => {
             const p = document.createElement("p");
+            p.id = `message-${msg.id}`;
 
             // Opret strong element for sender
             const strong = document.createElement("strong");
             strong.textContent = `${msg.sender}:`;
             p.appendChild(strong);
 
-            // Tilføj mellemrum og besked tekst
-            p.appendChild(document.createTextNode(` ${msg.text}`));
+            // Tilføj mellemrum og besked tekst (med ID for senere redigering)
+            const textSpan = document.createElement("span");
+            textSpan.id = `message-text-${msg.id}`;
+            textSpan.textContent = ` ${msg.text}`;
+            p.appendChild(textSpan);
 
             // Tilføj linjeskift
             p.appendChild(document.createElement("br"));
@@ -245,7 +249,36 @@ async function loadMessages(chatId) {
             // Opret small element for dato
             const small = document.createElement("small");
             small.textContent = msg.date;
+            if (msg.editedDate) {
+                small.textContent += ` (redigeret: ${msg.editedDate})`;
+            }
             p.appendChild(small);
+
+            // Tilføj rediger/slet knapper hvis brugeren har rettigheder
+            if (currentUser && (userLevel === 3 || (msg.sender === currentUser))) {
+                // Rediger knap
+                const editBtn = document.createElement("button");
+                editBtn.type = "button";
+                editBtn.textContent = "Rediger";
+                editBtn.className = "btn-small btn-edit";
+                editBtn.style.marginLeft = "10px";
+                editBtn.onclick = function() {
+                    editMessage(msg.id, msg.text);
+                };
+
+                // Slet knap
+                const deleteBtn = document.createElement("button");
+                deleteBtn.type = "button";
+                deleteBtn.textContent = "Slet";
+                deleteBtn.className = "btn-small btn-delete";
+                deleteBtn.style.marginLeft = "5px";
+                deleteBtn.onclick = function() {
+                    deleteMessage(msg.id);
+                };
+
+                p.appendChild(editBtn);
+                p.appendChild(deleteBtn);
+            }
 
             container.appendChild(p);
         });
@@ -269,17 +302,77 @@ async function editChat(chatId) {
         });
 
         if (res.ok) {
-            
+
             const li = document.getElementById(`chat-${chatId}`);
             const a = li.querySelector("a");
             a.textContent = newName.trim();
-           
+
         } else {
             const data = await res.json();
             alert("Fejl: " + (data.error || "Kunne ikke opdatere"));
         }
     } catch (err) {
         console.error("Fejl ved redigering:", err);
+        alert("Netværksfejl");
+    }
+}
+
+// --- EDIT MESSAGE (Rediger besked) ---
+async function editMessage(messageId, currentText) {
+    const newText = prompt("Rediger besked:", currentText);
+    if (!newText || newText.trim() === "") return;
+
+    try {
+        const res = await fetch(`/chats/messages/${messageId}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ text: newText.trim() })
+        });
+
+        if (res.ok) {
+            // Opdater beskeden i DOM'en
+            const textSpan = document.getElementById(`message-text-${messageId}`);
+            if (textSpan) {
+                textSpan.textContent = ` ${newText.trim()}`;
+            }
+
+            // Genindlæs beskeder for at vise "redigeret" dato
+            if (typeof currentChatId !== 'undefined') {
+                loadMessages(currentChatId);
+            }
+        } else {
+            const data = await res.json();
+            alert("Fejl: " + (data.error || "Kunne ikke redigere besked"));
+        }
+    } catch (err) {
+        console.error("Fejl ved redigering af besked:", err);
+        alert("Netværksfejl");
+    }
+}
+
+// --- DELETE MESSAGE (Slet besked) ---
+async function deleteMessage(messageId) {
+    if (!confirm("Er du sikker på, at du vil slette denne besked?")) {
+        return;
+    }
+
+    try {
+        const res = await fetch(`/chats/messages/${messageId}`, {
+            method: "DELETE"
+        });
+
+        if (res.ok) {
+            // Fjern beskeden fra DOM'en
+            const messageElement = document.getElementById(`message-${messageId}`);
+            if (messageElement) {
+                messageElement.remove();
+            }
+        } else {
+            const data = await res.json();
+            alert("Fejl: " + (data.error || "Kunne ikke slette besked"));
+        }
+    } catch (err) {
+        console.error("Fejl ved sletning af besked:", err);
         alert("Netværksfejl");
     }
 }

@@ -123,8 +123,9 @@
         "id": "1764329310324",
         "chatId": "1764152422999",
         "sender": "admin",
-        "text": "mojn",
-        "date": "28.11.2025, 12.28.30"
+        "text": "mojn1",
+        "date": "28.11.2025, 12.28.30",
+        "editedDate": "10.12.2025, 13.40.14"
       },
       {
         "id": "1764329317199",
@@ -143,7 +144,7 @@
   },
   {
     "id": "1764326272121",
-    "name": "hej chat",
+    "name": "Ny Ny chat",
     "owner": "admin",
     "oprettelsesDato": "2025-11-28T10:37:52.121Z",
     "messages": []

@@ -158,6 +158,86 @@ router.post("/chats/message", (req, res) => {
     res.json(newMessage);
 });
 
+// PUT /chats/messages/:id – opdater besked (kun sender eller admin)
+router.put("/chats/messages/:id", (req, res) => {
+    const messageId = req.params.id;
+    const { text: newText } = req.body;
+
+    if (!newText || newText.trim() === "") {
+        return res.status(400).json({ error: "Message text cannot be empty" });
+    }
+
+    const chats = getChats();
+    const user = req.session.user;
+    let messageFound = false;
+
+    // Søg gennem alle chats for at finde beskeden
+    for (const chat of chats) {
+        if (!chat.messages) continue;
+
+        const messageIndex = chat.messages.findIndex(m => m.id === messageId);
+
+        if (messageIndex !== -1) {
+            const message = chat.messages[messageIndex];
+
+            // Tjek permissions: sender eller admin
+            const isSender = message.sender === user.username;
+            const isAdmin = user.level === 3;
+
+            if (!isAdmin && !isSender) {
+                return res.status(403).json({ error: "No permission" });
+            }
+
+            // Opdater besked
+            message.text = newText.trim();
+            message.editedDate = new Date().toLocaleString('da-DK');
+
+            saveChats(chats);
+            messageFound = true;
+
+            return res.json({ success: true, message });
+        }
+    }
+
+    if (!messageFound) {
+        return res.status(404).json({ error: "Message not found" });
+    }
+});
+
+// DELETE /chats/messages/:id – slet besked (kun sender eller admin)
+router.delete("/chats/messages/:id", (req, res) => {
+    const messageId = req.params.id;
+    const chats = getChats();
+    const user = req.session.user;
+
+    // Søg gennem alle chats for at finde beskeden
+    for (const chat of chats) {
+        if (!chat.messages) continue;
+
+        const messageIndex = chat.messages.findIndex(m => m.id === messageId);
+
+        if (messageIndex !== -1) {
+            const message = chat.messages[messageIndex];
+
+            // Tjek permissions: sender eller admin
+            const isSender = message.sender === user.username;
+            const isAdmin = user.level === 3;
+
+            if (!isAdmin && !isSender) {
+                return res.status(403).json({ error: "No permission" });
+            }
+
+            // Slet besked
+            chat.messages.splice(messageIndex, 1);
+            saveChats(chats);
+
+            return res.json({ success: true });
+        }
+    }
+
+    return res.status(404).json({ error: "Message not found" });
+});
+
 
 // GET /users (List users)
 router.get("/users", (req, res) => {
